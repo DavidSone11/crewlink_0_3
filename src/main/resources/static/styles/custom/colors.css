@@ -1,0 +1,95 @@
+.selected-train-section{
+    background-color: #5cb85c !important;
+    border-color: #4cae4c;
+}
+.not-created-driving-section{
+    color: black;
+    background-color: #ff8000!important;
+    border-color: yellow;
+}
+
+.confirm-header-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+.confirm-footer-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.ng-isolate-scope ~ span {
+  color: green;
+}
+
+.highlight {
+	color: #ff0000;
+}
+.angucomplete-description {
+    font-size: 12px;
+    color: grey;
+}
+
+.ng-submitted.ng-dirty.ng-invalid,.ng-submitted.ng-dirty.ng-invalid,.ng-submitted.ng-dirty.ng-invalid ,
+.ng-submitted .ng-invalid, .ng-submitted .ng-invalid .ui-select-match .ui-select-toggle{
+	border-color: #b94a48;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+input.ng-invalid:focus, select.ng-invalid:focus,
+	textarea.ng-invalid:focus{
+	border-color: #953b39;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px
+		#d59392;
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+}
+
+.hide-errors {
+	
+}
+
+.row-red {
+	border-color: #d9534f;
+    color: #fff;
+    background-color: #d9534f !important;
+}
+
+.panel-skyblue {
+	border-color: #5BC0EB;
+}
+
+.panel-skyblue .panel-heading {
+	border-color: #5BC0EB;
+	color: #fff;
+	background-color: #5BC0EB;
+}
+
+.panel-skyblue a {
+	color: #5BC0EB;
+}
+
+.panel-skyblue a:hover {
+	color: #4C9CC1;
+}
+
+.panel-orange {
+	border-color: #FA7921;
+}
+
+.panel-orange .panel-heading {
+	border-color: #FA7921;
+	color: #fff;
+	background-color: #FA7921;
+}
+
+.panel-orange a {
+	color: #FA7921;
+}
+
+.panel-orange a:hover {
+	color: #E36209;
+}

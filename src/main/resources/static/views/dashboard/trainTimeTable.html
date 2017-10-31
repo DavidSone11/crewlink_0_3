@@ -1,0 +1,84 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Train Time Table</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Train No {{trainNo}} Originating On {{startDay}}
+				<div class="input-group pull-right">
+				
+				<label class="control-label"> Items Per Page (1-100) </label>
+						<input name="itemsperpage" class="input-sm form-control pull-right" min=1
+							max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+				
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" st-pipe="serverFetch.process"
+						st-table="trainStationsResult">
+						<thead>
+							<tr>
+								<th st-ratio="5" st-sort="stopNumber" st-sort-default="reverse" >S.No.</th>
+								<th st-ratio="5" st-sort="stationCode">Station Code</th>
+								<th st-ratio="25" st-sort="stationName">Station Name</th>
+								<th st-ratio="10" st-sort="arrival">Arrival</th>
+								<th st-ratio="10" st-sort="departure">Departure</th>
+								<th st-ratio="15" st-sort="day">Day</th>
+								<th st-ratio="10" st-sort="dayOfJourney">Day of Journey</th>
+								<th st-ratio="10" st-sort="distance">Distance (in KM)</th>
+								<th st-ratio="10" st-sort="duration">Journey Duration (in Mins)</th>
+								<!-- <th st-ratio="17">Actions</th> -->
+							</tr>
+							<tr>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="90" st-search="stationCode" placeholder="Station Code" st-delay="1000" /></th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<!-- <th>&nbsp;</th> -->
+							</tr>
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPage)" >
+							<tr ng-repeat="trainStation in trainStationsResult.data">
+								<td>{{trainStation[1]}}</td>
+								<td>{{trainStation[2]}}</td>
+								<td>{{trainStation[3]}}</td>
+								<td>{{trainStation[4]}}</td>
+								<td>{{trainStation[5]}}</td>
+								<td>{{Days[trainStation[6]] | limitTo:3}}</td>
+								<td>{{trainStation[7]}}</td>
+								<td>{{trainStation[8]}}</td>
+								<td>{{trainStation[9]}}</td>
+								
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height:200px">
+									<td colspan="9" class="text-center"><i class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Data...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="9" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+ </div>
+

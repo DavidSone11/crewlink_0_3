@@ -1,0 +1,758 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Create Driving Duties</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-7">
+			<div class="row">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						List Of Driving Sections
+						<div class="input-group pull-right">
+
+							<label class="control-label"> Items Per Page (1-100) </label> <input
+								name="itemsperpage" class="input-sm form-control pull-right"
+								min=1 max=100 value=5 step=1 type="number"
+								ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPageDrivingSection">
+						</div>
+
+					</div>
+					<div class="panel-body">
+						<table class="table table-striped"
+							st-pipe="serverFetchDrivingSections.process"
+							st-table="drivingSections">
+							<thead st-bind-model="{{refreshDrivingSection}}">
+								<tr>
+									<th st-ratio="5" st-sort="trainNo">Train No</th>
+									<th st-ratio="10" st-sort="originDay">Train Originating
+										Day</th>
+									<th st-ratio="5" st-sort="fromStation">From</th>
+									<th st-ratio="5" st-sort="toStation">To</th>
+									<th st-ratio="10" st-sort="departureDay">Dep Day</th>
+									<th st-ratio="10" st-sort="departureTime">Dep</th>
+									<th st-ratio="10" st-sort="startDay">Arr Day</th>
+									<th st-ratio="10" st-sort="startTime">Arr</th>
+									<th st-ratio="10" st-sort="duration">Duration (in Min.)</th>
+									<th st-ratio="10" st-sort="distance">Distance (in KM.)</th>
+								</tr>
+								<tr>
+									<th><input type="text" st-ratio="100" st-search="trainNo"
+										placeholder="Train No" st-delay="1000" /></th>
+									<th><select st-ratio="90" st-search="originDay"
+										ng-model="originDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select></th>
+									<th><input type="text" st-ratio="100"
+										st-search="fromStation" placeholder="From Station Code"
+										st-delay="1000" ng-model="fromStationDrivingSection"
+										ng-disabled="disableFromStation" /></th>
+									<th><input type="text" st-ratio="100"
+										st-search="toStation" placeholder="To Station Code"
+										st-delay="1000" ng-model="toStationDrivingSection"
+										ng-disabled="disableToStation" /></th>
+
+									<th><select st-ratio="90" st-search="departureDay"
+										ng-model="departureDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select></th>
+									</th>
+									<th><input type="text" st-ratio="45"
+										st-search="minDepartureTime" placeholder="Min Departure Time"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDepartureTime" placeholder="Max Departure Time"
+										st-delay="1000" /></th>
+									<th><select st-ratio="90" st-search="arrivalDay"
+										ng-model="arrivalDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select></th>
+									<th><input type="text" st-ratio="45"
+										st-search="minArrivalTime" placeholder="Min Arrival Time"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxArrivalTime" placeholder="Max Arrival Time"
+										st-delay="1000" /></th>
+
+									<th><input type="text" st-ratio="45"
+										st-search="minDuration" placeholder="Min Duration"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDuration" placeholder="Max Duration"
+										st-delay="1000" /></th>
+									<th><input type="text" st-ratio="45"
+										st-search="minDistance" placeholder="Min Distance"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDistance" placeholder="Max Distance"
+										st-delay="1000" /></th>
+								</tr>
+							</thead>
+							<tbody ng-show="!isLoadingDrivingSections && (itemsPerPage)">
+								<tr ng-repeat="drivingSection in drivingSections.data"
+									ng-click="addDrivingSection(drivingSection);"
+									ng-show="isDrivingSectionUnused(drivingSection);">
+									<td>{{drivingSection[drivingSections.fields.trainNo]}}</td>
+									<td>{{Days[drivingSection[drivingSections.fields.originDay]]}}</td>
+									<td>{{drivingSection[drivingSections.fields.fromStation]}}</td>
+									<td>{{drivingSection[drivingSections.fields.toStation]}}</td>
+									<td>{{Days[drivingSection[drivingSections.fields.departureDay]]|limitTo:3
+										}}</td>
+									<td>{{drivingSection[drivingSections.fields.departureTime]}}</td>
+									<td>{{Days[drivingSection[drivingSections.fields.arrivalDay]]|limitTo:3
+										}}</td>
+									<td>{{drivingSection[drivingSections.fields.arrivalTime]}}</td>
+									<td>{{drivingSection[drivingSections.fields.duration]|
+										time:'mm':'hhh mmm':false}}</td>
+									<td>{{drivingSection[drivingSections.fields.distance]}}</td>
+								</tr>
+							</tbody>
+							<tbody ng-show="isLoadingDrivingSections">
+								<tr style="height: 200px">
+									<td colspan="8" class="text-center"><i
+										class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Driving
+										Sections...</td>
+								</tr>
+							</tbody>
+
+							<tfoot>
+								<tr>
+									<td colspan="8" class="text-center">
+										<div st-items-by-page="itemsPerPageDrivingSection" st-pagination=""
+											st-template="scripts/directives/pagination/pagination.custom.html"></div>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						List Of Pilot Trips
+						<div class="input-group pull-right">
+							<label class="control-label"> Items Per Page (1-100) </label> <input
+								name="itemsperpage" class="input-sm form-control pull-right"
+								min=1 max=100 value=5 step=1 type="number"
+								ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+						</div>
+
+					</div>
+					<div class="panel-body">
+						<table class="table table-striped"
+							st-pipe="serverFetchPilotTrips.process" st-table="pilotTrips">
+							<thead st-bind-model="{{refreshPilotTrip}}">
+								<tr>
+									<th st-ratio="5">S.No.</th>
+									<th st-ratio="10" st-sort="pilotTripName">Trip Name</th>
+									<th st-ratio="20" st-sort="fromStation">From</th>
+									<th st-ratio="20" st-sort="toStation">To</th>
+									<th st-ratio="20" st-sort="departureDay">Departure Day</th>
+									<th st-ratio="20" st-sort="departureTime">Departure Time</th>
+									<th st-ratio="20" st-sort="arrivalDay">Arrival Day</th>
+									<th st-ratio="20" st-sort="arrivalTime">Arrival Time</th>
+									<th st-ratio="5" st-sort="distance">Distance(in Km)</th>
+									<th st-ratio="5" st-sort="duration">Duration(in Min)</th>
+									
+
+									<th st-ratio="10" st-sort="pilotType.name">Pilot Type</th>
+									<th st-ratio="10">Action</th>
+								</tr>
+								<tr>
+									<th>&nbsp;</th>
+									<th><input type="text" st-ratio="100" st-search="pilotTripName"
+										placeholder="Trip Name" st-delay="1000" /></th>
+									<th><input type="text" st-ratio="100"
+										st-search="fromStation" placeholder="From" st-delay="1000"
+										ng-model="fromStationPilotTrip"
+										ng-disabled="disableFromPilotTrip" /></th>
+									
+									
+									<th><input type="text" st-ratio="100"
+										st-search="toStation" placeholder="To" st-delay="1000"
+										ng-model="toStationPilotTrip" ng-disabled="disableToPilotTrip" /></th>
+										
+								  <th><select st-ratio="90" st-search="departureDay"
+										ng-model="departureDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select>
+								  </th>
+								  
+								  <th><input type="text" st-ratio="45"
+										st-search="minDepartureTime" placeholder="Min Departure Time"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDepartureTime" placeholder="Max Departure Time"
+										st-delay="1000" />
+								 </th>
+								  
+								 <th><select st-ratio="90" st-search="arrivalDay"
+										ng-model="arrivalDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select>
+								  </th>
+								
+								   
+								 <th><input type="text" st-ratio="45"
+										st-search="minArrivalTime" placeholder="Min Arrival Time"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxArrivalTime" placeholder="Max Arrival Time"
+										st-delay="1000" />
+								 </th>	
+									
+											
+						
+
+										<th><input type="text" st-ratio="45"
+										st-search="minDistance" placeholder="Min Distance"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDistance" placeholder="Max Distance"
+										st-delay="1000" /></th>
+										
+									
+										<th><input type="text" st-ratio="45"
+										st-search="minDuration" placeholder="Min Duration"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDuration" placeholder="Max Duration"
+										st-delay="1000" /></th>
+										
+								
+									
+
+									<th><input type="text" st-ratio="100"
+										st-search="pilotType" placeholder="Pilot Type" st-delay="1000" /></th>
+
+								</tr>
+							</thead>
+							<tbody ng-show="!isLoadingPilotTrips && (itemsPerPage)">
+								<tr ng-repeat="pilotTrip in pilotTrips.data">
+									<td>{{(itemsPerPage)? ((currentPage * itemsPerPage +
+										$index +1)-itemsPerPage ):''}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.pilotTripName]}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.fromStation]}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.toStation]}}</td>
+									<td>{{Days[pilotTrip[pilotTrips.fields.departureDay]]|limitTo:3}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.departureTime]}}</td>
+									<td>{{Days[pilotTrip[pilotTrips.fields.arrivalDay]]|limitTo:3}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.arrivalTime]}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.distance]}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.duration]| time:'mm':'hhh mmm':false}}</td>
+									<td>{{pilotTrip[pilotTrips.fields.pilotType]}}</td>
+									<td><a class="btn btn-success fa fa-plus"
+										ng-click="addStartPilotTrip(pilotTrip);"
+										ng-show="(pilotTrip[pilotTrips.fields.toStation]==selectedDrivingDutyElement.drivingSection[drivingSections.fields.fromStation])?true:((selectedDrivingDutyElement.drivingSection)?false:true);">Add
+											Start Pilot</a> <a class="btn btn-danger fa fa-plus"
+										ng-click="addEndPilotTrip(pilotTrip);"
+										ng-show="(pilotTrip[pilotTrips.fields.fromStation]==selectedDrivingDutyElement.drivingSection[drivingSections.fields.toStation])?true:false">Add
+											End Pilot</a></td>
+								</tr>
+							</tbody>
+							<tbody ng-show="isLoadingPilotTrips">
+								<tr>
+									<td colspan="9" class="text-center"><i
+										class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Pilot
+										Trips...</td>
+								</tr>
+							</tbody>
+
+							<tfoot>
+								<tr>
+									<td colspan="5" class="text-center">
+										<div st-items-by-page="itemsPerPage" st-pagination=""
+											st-template="scripts/directives/pagination/pagination.custom.html"></div>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-5">
+			<div class="row">
+
+				<div class="col-lg-4 startPilot padding3">
+					<div class="panel panel-primary text-center">
+						<div class="panel-heading">
+							<h3 class="panel-title">Start Pilot</h3>
+						</div>
+						<div class="panel-body padding5">
+							<div ng-hide="selectedDrivingDutyElement.startPilotTrip">
+								<div class="alert alert-success margin-bottom0 padding5"
+									role="alert">Add Start Pilot.</div>
+							</div>
+							<div ng-show="selectedDrivingDutyElement.startPilotTrip">
+								<div class="row"><strong>
+									{{selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.fromStation]}}
+									-
+									{{selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.toStation]}}
+									</strong>
+								
+								</div>
+								
+								<div class="row">Dep Day:
+								<strong>{{Days[selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.departureDay]]|limitTo:3}}</strong>
+								</div>
+								
+								<div class="row">Dep:
+								<strong>{{selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.departureTime]}}</strong>
+								</div>
+								
+								<div class="row">Arr Day:
+								<strong>{{Days[selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.arrivalDay]]|limitTo:3}}</strong>
+								</div>
+								
+								<div class="row">Arr:
+								<strong>{{selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.arrivalTime]}}</strong>
+								</div>
+								
+								<div class="row">Duration :
+								<strong>	{{selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.duration]|
+									time:'mm':'hhh mmm':false}}</strong></div>
+								<div class="row">Distance :
+									<strong>{{selectedDrivingDutyElement.startPilotTrip[pilotTrips.fields.distance]}}
+									Kms.</strong></div>
+								<a class="btn btn-danger btn-xs"
+									ng-click="removeStartPilotTrip();"
+									ng-show="selectedDrivingDutyElement.startPilotTrip">
+									Remove Pilot</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="col-lg-4 drivingSection padding3">
+					<div class="panel panel-primary text-center">
+						<div class="panel-heading">
+							<h3 class="panel-title">Driving Section</h3>
+						</div>
+						<div class="panel-body padding5">
+							<div ng-hide="selectedDrivingDutyElement.drivingSection">
+								<div class="alert alert-success margin-bottom0 padding5"
+									role="alert">Add Driving Section.</div>
+							</div>
+							<div ng-show="selectedDrivingDutyElement.drivingSection">
+								<div class="row"><strong>{{selectedDrivingDutyElement.drivingSection[drivingSections.fields.fromStation]}}
+									-
+									{{selectedDrivingDutyElement.drivingSection[drivingSections.fields.toStation]}}</strong>
+								</div>
+								
+								<div class="row">Dep Day:
+								<strong>{{Days[selectedDrivingDutyElement.drivingSection[drivingSections.fields.departureDay]]|limitTo:3}}</strong>
+								</div>
+								
+								<div class="row">Dep:
+								<strong>{{selectedDrivingDutyElement.drivingSection[drivingSections.fields.departureTime]}}</strong>
+								</div>
+								
+								<div class="row">Arr Day:
+								<strong>{{Days[selectedDrivingDutyElement.drivingSection[drivingSections.fields.arrivalDay]]|limitTo:3}}</strong>
+								</div>
+								
+								<div class="row">Arr:
+								<strong>{{selectedDrivingDutyElement.drivingSection[drivingSections.fields.arrivalTime]}}</strong>
+								</div>
+								
+								
+								<div class="row">Duration :
+									<strong>{{selectedDrivingDutyElement.drivingSection[drivingSections.fields.duration] |
+									time:'mm':'hhh mmm':false}}</strong></div>
+								<div class="row">Distance :
+									<strong>{{selectedDrivingDutyElement.drivingSection[drivingSections.fields.distance]}}
+									Kms.</strong></div>
+								<a class="btn btn-danger btn-xs"
+									ng-click="removeDrivingSection();"
+									ng-show="selectedDrivingDutyElement.drivingSection">
+									Remove Section</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-lg-4 endPilot padding3">
+					<div class="panel panel-primary text-center">
+						<div class="panel-heading">
+							<h3 class="panel-title">End Pilot</h3>
+						</div>
+						<div class="panel-body padding5">
+							<div ng-hide="selectedDrivingDutyElement.endPilotTrip">
+								<div class="alert alert-success margin-bottom0 padding5"
+									role="alert">Add End Pilot.</div>
+							</div>
+							<div ng-show="selectedDrivingDutyElement.endPilotTrip">
+								<div class="row">
+									<strong>{{selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.fromStation]}}
+									-
+									{{selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.toStation]}}</strong>
+								</div>
+								
+								<div class="row">Dep Day:
+								<strong>{{Days[selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.departureDay]]|limitTo:3}}</strong>
+								</div>
+								
+								<div class="row">Dep:
+								<strong>{{selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.departureTime]}}</strong>
+								</div>
+								
+								<div class="row">Arr Day:
+								<strong>{{Days[selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.arrivalDay]]|limitTo:3}}</strong>
+								</div>
+								
+								<div class="row">Arr:
+								<strong>{{selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.arrivalTime]}}</strong>
+								</div>
+								
+								
+								
+								<div class="row">Duration :
+									<strong>{{selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.duration] |
+									time:'mm':'hhh mmm':false}}</strong></div>
+								<div class="row">Distance :
+									<strong>{{selectedDrivingDutyElement.endPilotTrip[pilotTrips.fields.distance]}} Kms.</div></strong>
+								<a class="btn btn-danger btn-xs"
+									ng-click="removeEndPilotTrip();"
+									ng-show="selectedDrivingDutyElement.endPilotTrip">
+									Remove Pilot</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<a class="btn btn-success fa fa-plus" style="margin: 4px;"
+					ng-click="addDrivingDutyElement();">Add</a>
+			</div>
+
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">List Of Driving Duty Elements</div>
+					<div class="panel-body">
+						<table class="table table-striped" st-table="drivingDutyElements">
+							<thead>
+								<tr>
+									<th st-ratio="5">S.No.</th>
+									<th st-ratio="10">From</th>
+									<th st-ratio="10">To</th>
+									<th st-ratio="10">Dep Day</th>
+									<th st-ratio="10">Dep</th>
+									<th st-ratio="10">Arr Day</th>
+									<th st-ratio="10">Arr</th>
+									<th st-ratio="5">Distance</th>
+									<th st-ratio="5">Duration</th>
+
+
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="drivingDutyElement in drivingDutyElements">
+									<td>{{$index + 1}}</td>
+									<td>{{drivingDutyElement.fromStation}}</td>
+									<td>{{drivingDutyElement.toStation}}</td>
+									<td>{{Days[drivingDutyElement.departureDay]|limitTo :3}}</td>
+									<td>{{drivingDutyElement.departureTime}}</td>
+									<td>{{Days[drivingDutyElement.arrivalDay]|limitTo :3}}</td>
+									<td>{{drivingDutyElement.arrivalTime}}</td>
+									<td>{{drivingDutyElement.distance}}</td>
+									<td>{{drivingDutyElement.duration | time:'mm':'hhh
+										mmm':false}}</td>
+
+
+								</tr>
+							</tbody>
+						</table>
+						<div ng-show="drivingDutyElements.length>0" class="row">
+							<div class="col-lg-7">
+							Sign On Duration : <select ng-model="signOnDuration">
+											<option value="0">0 Mins</option>
+											<option value="10">10 Mins</option>
+											<option value="15">15 Mins</option>
+											<option value="20">20 Mins</option>
+											<option value="30">30 Mins</option>
+											<option value="45">45 Mins</option>
+											<option value="50">50 Mins</option>
+											<option value="60">60 Mins</option>
+									</select>
+							</div>
+							<div class="col-lg-5">
+							Sign Off Duration : <select ng-model="signOffDuration">
+											<option value="0">0 Mins</option>
+											<option value="10">10 Mins</option>
+											<option value="15">15 Mins</option>
+											<option value="20">20 Mins</option>
+											<option value="30">30 Mins</option>
+											<option value="45">45 Mins</option>
+											<option value="50">50 Mins</option>
+											<option value="60">60 Mins</option>
+									</select>
+							</div>
+						</div>
+						<br />
+						<div class="row">
+						<a class="btn btn-sm btn-danger"
+							ng-show="drivingDutyElements.length>0"
+							ng-click="removeLastDrivingDutyElement()">Remove Last Element</a>
+						<a class="btn btn-sm btn-primary"
+							ng-show="drivingDutyElements.length>0"
+							ng-click="saveDrivingDuty()">Save Duty</a>
+						</div>
+
+					</div>
+
+				</div>
+				<a class="btn btn-sm btn-primary" data-toggle="modal"
+					data-target="#myModal" ng-click="saveManyDrivingDuty()">Save
+					Many Duty</a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<form class="form-inline">
+							Chart for all driving sections per week from and to :
+							<div class="form-group">
+								<input type="text" id="chartStationCode"
+									ng-model="chartStationCode" class="form-control"
+									placeholder="Station Code" style="width: 110px;">
+								Station ,No of Driving Section: <input type="text"
+									id="totalTrains" ng-model="noOfTrainsLimit"
+									class="form-control" placeholder="no of trains"
+									style="width: 110px;">
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadDrivingSectionsChart()">search</button>
+							</div>
+							<!-- rest of form -->
+						</form>
+					</div>
+					<div class="panel-body">
+						<div id="drivingSectionsForSingleStation"></div>
+					</div>
+					<div class="panel-body" ng-if="isChartLoading">
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<td colspan="4" class="text-center"><i
+										class="fa fa-spinner fa-4x fa-pulse"> </i> Loading
+										{{chartStationCode}} Driving Sections on chart...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<toaster-container
+		toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+
+
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog  view-modal-custom-90">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<div class="panel-heading">
+						<h4 class="modal-title">List of Driving Sections</h4>
+						<div class="input-group pull-right">
+							<label class="control-label"> Items Per Page (1-100) </label> <input
+								name="itemsperpage" class="input-sm form-control pull-right"
+								min=1 max=100 value=5 step=1 type="number"
+								ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+						</div>
+					</div>
+				</div>
+				
+				
+				<div class="col-lg-7">
+					Sign On Duration : <select ng-model="signOnDuration">
+									<option value="10">10 Mins</option>
+									<option value="15">15 Mins</option>
+									<option value="20">20 Mins</option>
+									<option value="30">30 Mins</option>
+									<option value="45">45 Mins</option>
+									<option value="50">45 Mins</option>
+									<option value="60">45 Mins</option>
+							</select>
+				</div>
+				
+				
+				<div class="col-lg-3">
+					Sign Off Duration : <select ng-model="signOffDuration">
+								<option value="10">10 Mins</option>
+								<option value="15">15 Mins</option>
+								<option value="20">20 Mins</option>
+								<option value="30">30 Mins</option>
+								<option value="45">45 Mins</option>
+								<option value="50">45 Mins</option>
+								<option value="60">45 Mins</option>
+						</select>
+				</div>
+	
+
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="drivingSection padding3">
+							<div class="panel panel-primary text-center">
+								<div class="panel-heading">
+									<h3 class="panel-title">Create Driving Duty</h3>
+								</div>
+								<div class="panel-body padding5">
+
+									<div class="row">
+										<div class="col-lg-12">
+											<table class="table table-striped"
+												st-pipe="serverFetchDrivingSectionsForMany.process"
+												st-table="drivingSectionsForMany">
+												<thead st-bind-model="{{refreshDrivingSection}}">
+													<tr>
+														<th st-ratio="5">Select All</th>
+														<th st-ratio="5">Sl No</th>
+														<th st-ratio="5" st-sort="trainNo">Train No</th>
+														<th st-ratio="10" st-sort="originDay">Train
+															Origin Day</th>
+														<th st-ratio="5" st-sort="fromStation">From</th>
+														<th st-ratio="5" st-sort="toStation">To</th>
+														<th st-ratio="10" st-sort="departureDay">Dep Day</th>
+														<th st-ratio="10" st-sort="departureTime">Departure</th>
+														<th st-ratio="10" st-sort="arrivalDay">Arrival Day</th>
+														<th st-ratio="10" st-sort="arrivalTime">Arrival</th>
+														<th st-ratio="10" st-sort="duration">Duration (in
+															Min.)</th>
+														<th st-ratio="10" st-sort="distance">Distance (in
+															KM.)</th>
+													</tr>
+													<tr>
+														<th st-ratio="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+															<input type="checkbox" ng-click="toggleAll()"
+															ng-model="isAllSelected">
+														</th>
+														<th>&nbsp;</th>
+														<th><input type="text" st-ratio="100"
+															st-search="trainNo" placeholder="Train No"
+															st-delay="1000" /></th>
+														<th><select st-ratio="90" st-search="originDay">
+																<option value="" selected>All</option>
+																<option ng-repeat="day in Days" value="{{day}}">{{
+																	day }}</option>
+														</select></th>
+														<th><input type="text" st-ratio="100"
+															st-search="fromStation" placeholder="From Station Code"
+															st-delay="1000"
+															ng-disabled="disableFromStation" /></th>
+														<th><input type="text" st-ratio="100"
+															st-search="toStation" placeholder="To Station Code"
+															st-delay="1000" 
+															ng-disabled="disableToStation" /></th>
+
+														<th><select st-ratio="45" st-search="departureDay">
+																<option value="" selected>All</option>
+																<option ng-repeat="day in Days" value="{{day}}">{{
+																	day }}</option>
+														</select></th>
+														<th><input type="text" st-ratio="45"
+															st-search="minDepartureTime" placeholder="Min Dep Time"
+															st-delay="1000" /> <input type="text" st-ratio="45"
+															st-search="maxDepartureTime" placeholder="Max Dep Time"
+															st-delay="1000" /></th>
+															
+														<th><select st-ratio="45" st-search="arrivalDay">
+																<option value="" selected>All</option>
+																<option ng-repeat="day in Days" value="{{day}}">{{
+																	day }}</option>
+														</select></th>
+														<th><input type="text" st-ratio="45"
+															st-search="minArrivalTime" placeholder="Min Arrival Time"
+															st-delay="1000" /> <input type="text" st-ratio="45"
+															st-search="maxArrivalTime" placeholder="Max Arrival Time"
+															st-delay="1000" /></th>
+
+														<th><input type="text" st-ratio="45"
+															st-search="minDuration" placeholder="Min Duration"
+															st-delay="1000" /> <input type="text" st-ratio="45"
+															st-search="maxDuration" placeholder="Max Duration"
+															st-delay="1000" /></th>
+														<th><input type="text" st-ratio="45"
+															st-search="minDistance" placeholder="Min Distance"
+															st-delay="1000" /> <input type="text" st-ratio="45"
+															st-search="maxDistance" placeholder="Max Distance"
+															st-delay="1000" /></th>
+													</tr>
+												</thead>
+												<!-- ng-show="isDrivingSectionUnused(drivingSection); -->
+												<tbody ng-show="!isLoadingDrivingSectionsForMany && (itemsPerPage)">
+													<tr ng-repeat="drivingSection in drivingSectionsForMany.data" ng-hide="isDrivingSectionManySaved(drivingSection)">
+														<td><input name="singledrivingduty" type="checkbox" ng-init=""
+															ng-model="drivingSection[drivingSection.length-2]"></td>
+														<td>{{$index + 1}}</td>
+														<td>{{drivingSection[drivingSections.fields.trainNo]}}</td>
+														<td>{{Days[drivingSection[drivingSections.fields.originDay]]}}</td>
+														<td>{{drivingSection[drivingSections.fields.fromStation]}}</td>
+														<td>{{drivingSection[drivingSections.fields.toStation]}}</td>
+														<td>{{Days[drivingSection[drivingSections.fields.departureDay]]|limitTo :3}}</td>
+														<td>{{drivingSection[drivingSections.fields.departureTime]}}</td>
+														<td>{{Days[drivingSection[drivingSections.fields.arrivalDay]]|limitTo :3}}</td>
+														<td>{{drivingSection[drivingSections.fields.arrivalTime]}}</td>
+														<td>{{drivingSection[drivingSections.fields.duration]| time:'mm':'hhh
+															mmm':false}}</td>
+														<td>{{drivingSection[drivingSections.fields.distance]}}</td>
+													</tr>
+												</tbody>
+												<tbody ng-show="isLoadingDrivingSectionsForMany">
+													<tr>
+														<td colspan="4" class="text-center"><i
+															class="fa fa-spinner fa-4x fa-pulse"> </i> Loading
+															Data...</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<td colspan="5" class="text-center">
+															<div st-items-by-page="itemsPerPageTest" st-pagination=""
+																st-template="scripts/directives/pagination/pagination.custom.html"></div>
+														</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary"
+						ng-click="saveMultipleDrivingDuty()">Save Many Duties</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+</div>
+
+

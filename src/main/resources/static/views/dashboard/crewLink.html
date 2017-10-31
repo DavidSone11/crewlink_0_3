@@ -1,0 +1,507 @@
+<style>
+.roundTrip>tbody>tr:nth-of-type(odd) {
+	background: #9CCA73;
+}
+
+.roundTrip>tbody>tr:nth-of-type(even) {
+	background: #7C9C60;
+}
+
+.drivingDuty>tbody>tr:nth-of-type(even) {
+	background: #68B5E2;
+}
+
+.drivingDuty>tbody>tr:nth-of-type(odd) {
+	background: #92F4F9;
+}
+
+.drivingDutyElement>tbody>tr:nth-of-type(even) {
+	background: #CEA719;
+}
+
+.drivingDutyElement>tbody>tr:nth-of-type(odd) {
+	background: #E4FF7A;
+}
+
+.spiralmodal {
+	position: fixed;
+	top: 5% !important;
+	left: 25%;
+	width: 800px;
+	height: 600px;
+}
+</style>
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">List Of Crew Links</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					List Of Crew Links
+					<div class="input-group pull-right">
+					<a class="btn btn-md btn-warning btn-xs"
+									data-toggle="modal" data-target="#linksComparison"
+									ng-click="loadCrewLinksComp()" title="Links Comparison Chart">Links Comparison Chart</a>
+					</div>
+					<div class="input-group pull-right">
+						<button id="exportAllLinksToCSV" type="button"
+							class="btn btn-primary btn-xs  pull-right"
+							ng-click="exportAllLinksToCSV()">Export All Links To CSV</button>
+					</div>
+					<div class="input-group pull-right">
+						<button type="button" class="btn btn-primary btn-xs  pull-right"
+							ng-csv="getCrewLinksListCSVRecords()"
+							csv-header="getCrewLinksListCSVHeader()"
+							filename="crewLinksList.csv">Export List To CSV</button>
+					</div>
+					<div class="input-group pull-right">
+						<label class="control-label"> Items Per Page (1-100) </label> <input
+							name="itemsperpage" class="input-sm form-control pull-right"
+							min=1 max=100 value=100 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+					
+					
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" st-pipe="serverFetch.process"
+						st-table="crewLinks">
+						<thead>
+							<tr>
+								<th st-ratio="5">S.No.</th>
+								<th st-ratio="10" st-sort="linkName">Link Name</th>
+								<th st-ratio="5" st-sort="locoPilots">Loco Pilots</th>
+								<th st-ratio="10" st-sort="station">Base Station</th>
+								<th st-ratio="5">No Of RT/30</th>
+								<th st-ratio="5" st-sort="distance">Total KM</th>
+								<th st-ratio="5">KM/LP/D (in KM)</th>
+								<th st-ratio="5">KM/30D (in KM)</th>
+								<th st-ratio="5">Duty Hrs/14Days  (in H.M)</th>
+								<th st-ratio="5">% Duty Hrs</th>
+								<th st-ratio="5">% OSR</th>
+								<th st-ratio="5">% HQR</th>
+								<th st-ratio="10">Action</th>
+							</tr>
+							<tr>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="90" st-search="linkName"
+									placeholder="Link Name" st-delay="1000" /></th>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="90" st-search="station"
+									placeholder="Station" st-delay="1000" /></th>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="45"
+									st-search="minDistance" placeholder="Min Distance"
+									st-delay="1000" /> <input type="text" st-ratio="45"
+									st-search="maxDistance" placeholder="Max Distance"
+									st-delay="1000" /></th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+							</tr>
+
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPage)">
+							<tr ng-repeat="link in crewLinks.data">
+								<td>{{(itemsPerPage)? ((currentPage * itemsPerPage + $index
+									+1)-itemsPerPage ):''}}</td>
+								<td>{{link[crewLinks.fields.linkName]}}</td>
+								<td>{{link[crewLinks.fields.locoPilots]}}</td>
+								<td>{{link[crewLinks.fields.station]}}</td>
+								<td>{{link[crewLinks.fields.NoOfRTPer30Days]}}</td>
+								<td>{{link[crewLinks.fields.distance]}}</td>
+								<td>{{link[crewLinks.fields.KMPerLPPerDay]}}</td>
+								<td>{{link[crewLinks.fields.Km30Days]}}</td>
+								<td>{{link[crewLinks.fields.DutyHrs14Days]}}</td>
+								<td>{{link[crewLinks.fields.PercentDutyHrs]}}</td>
+								<td>{{link[crewLinks.fields.PercentOSR]}}</td>
+								<td>{{link[crewLinks.fields.PercentHQR]}}</td>
+								<td><a class="btn btn-md btn-warning btn-xs fa fa-th-list"
+									data-toggle="modal" data-target="#myModal"
+									ng-click="loadCompleteCrewLink(link)" title="Details"> </a> 
+									<a class="btn btn-md btn-primary btn-xs fa fa-line-chart"
+									data-toggle="modal" data-target="#crewLinkAnalysisModel"
+									ng-click="loadCrewLinkAnalysisChart(link)" title="Analysis Chart"> </a>
+									<a class="btn btn-xs btn-danger fa fa-remove"
+									ng-click="removeCrewLink(link[crewLinks.fields.id])"
+									confirm="Are you sure to delete !!!"
+									confirm-settings="{size: 'md'}"
+									confirm-header-class="confirm-header-danger "
+									confirm-footer-class="confirm-footer-default"
+									confirm-ok-button-class="btn-danger"
+									confirm-cancel-button-class="btn-default"
+									confirm-title="Confirm Deletion!!" confirm-ok="Yes"
+									confirm-cancel="No" title="Remove"> </a></td>
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height: 200px">
+								<td colspan="13" class="text-center"><i
+									class="fa fa-spinner fa-3x fa-pulse"> </i> Loading Crew
+									Links...</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="11" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<div id="spiralchart" class="modal fade spiralmodal" role="dialog">
+
+		<div class="modal-content">
+			<div class="row">
+				<div class="col-lg-12">
+					<button type="button" class="btn btn-danger btn-md pull-right"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<toaster-container
+		toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog crewlink-view-modal-custom">
+
+			<!-- Modal content-->
+			<div class="modal-content ">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Driving Sections</h4>
+					<button class="btn btn-md btn-primary pull-right"
+						data-toggle="modal" data-target="#crewLinkAnalysisModel"
+						ng-click="loadCrewLinkAnalysisChart()"
+						title="Crew Link Analysis Chart">Crew Link Analysis Chart</button>
+				</div>
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-12 col-lg-offset-3">
+							<div class="col-lg-6  padding3">
+								<div class="panel panel-primary">
+									<div class="panel-heading">
+										<h3 class="panel-title">PROPOSED
+											{{crewlinkDetails.linkname}} ( {{crewlinkDetails.NoOfLpp}}
+											MEN)</h3>
+									</div>
+									<div class="panel-body padding5">
+										<div class="row">
+											<div class="col-lg-12">
+
+												<table>
+													<tr>
+														<td><span>No.of loco pilot in the link : <b>{{crewlinkDetails.NoOfLpp}}
+																	Men</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>No. of RT per 30 Days : <b>{{crewlinkDetails.NoOfLPPer30Days}}</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>KM per LP per Day : <b>{{crewlinkDetails.KMPerLPPerDay}}</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>KM per 30 Days : <b>{{crewlinkDetails.KMPer30Days}}</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Duty Hrs per 14 Days : <b>{{crewlinkDetails.DutyHrs14Days}}</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Percent Duty Hrs : <b>{{crewlinkDetails.PercentDutyHrs}}</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Percent OSR : <b>{{crewlinkDetails.PercentOSR}}</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Percent HQR : <b>{{crewlinkDetails.PercentHQR}}</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Average working hours per LP per
+																week : <b>{{crewlinkDetails.averageworkinghoursPerWeek}}
+																	hours</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Average Kms.perLP per month : <b>{{crewlinkDetails.AverageKmsPermonth}}
+																	Kms</b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Average OS Rest : <b>{{crewlinkDetails.averageOSRest
+																	| time:'mm':'hhh mmm':false}} </b>
+														</span></td>
+													</tr>
+													<tr>
+														<td><span>Average HQ Rest : <b>{{crewlinkDetails.averageHQRest
+																	| time:'mm':'hhh mmm':false}} </b>
+														</span></td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12 drivingSection padding3">
+							<div class="panel panel-primary text-center">
+								<div class="panel-heading"></div>
+								<div class="panel-body padding5">
+									<div class="row">
+										<div class="col-lg-12">
+											<table class="table table-striped roundTrip">
+												<thead>
+													<tr>
+														<th>S.No</th>
+														<th>Driving Duties</th>
+														<th>RT OS Rest</th>
+														<th>HQ Rest</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-show="!isLoadingCrewLink"
+														ng-repeat="rt in crewLinkPlan">
+														<td>{{rt.rtOrder + 1}}</td>
+														<td><table class="table table-striped drivingDuty">
+																<thead ng-show="isHeading(rt.rtOrder)">
+																	<tr>
+																		<th>S.No</th>
+																		<th>DD Sign On</th>
+																		<th>DD Sign On Day</th>
+																		<th>DD Duration</th>
+																		<th>Duty Sections</th>
+																		<th>DD Sign Off</th>
+																		<th>DD Sign Off Day</th>
+																	</tr>
+																</thead>
+																<colgroup>
+																	<col style="width: 2%">
+																	<col style="width: 5%">
+																	<col style="width: 4%">
+																	<col style="width: 5%">
+																	<col>
+																	<col style="width: 5%">
+																	<col style="width: 4%">
+																</colgroup>
+																<tbody>
+																	<tr ng-repeat="dd in rt.dd">
+																		<td>{{dd.ddOrder + 1}}</td>
+																		<td>{{dd.ddSignOn}}</td>
+																		<td>{{Days[dd.ddSignOnDay] | limitTo: 3}}</td>
+																		<td>{{dd.ddDuration | time:'mm':'hhh mmm':false}}</td>
+																		<td><table
+																				class="table table-striped drivingDutyElement">
+																				<thead ng-show="isHeading(rt.rtOrder+dd.ddOrder)">
+																					<tr>
+																						<th>S.No</th>
+																						<th>DDE Dep.</th>
+																						<th>DDE Dep. Day</th>
+																						<th>Start Pilot</th>
+																						<th>SP From Sta</th>
+																						<th>SP To Sta</th>
+																						<th>SP Dist. (Half)</th>
+																						<th>DS Train</th>
+																						<th>DS From</th>
+																						<th>DS To</th>
+																						<th>DS Train Orgin Day</th>
+																						<th>DS Dist.</th>
+																						<th>End Pilot</th>
+																						<th>EP From Sta</th>
+																						<th>EP To Sta</th>
+																						<th>EP Dist. (Half)</th>
+																						<th>DDE Arr. Time</th>
+																						<th>DDE Arr. Day</th>
+																					</tr>
+																				</thead>
+																				<col style="width: 2%">
+																				<col style="width: 4%">
+																				<col style="width: 3%">
+																				<col style="width: 5%">
+																				<col style="width: 3%">
+																				<col style="width: 4%">
+																				<col style="width: 3%">
+																				<col style="width: 4%">
+																				<col style="width: 3%">
+																				<col style="width: 4%">
+																				<col style="width: 3%">
+																				<col style="width: 5%">
+																				<col style="width: 3%">
+																				<col style="width: 4%">
+																				<col style="width: 4%">
+																				<col style="width: 3%">
+
+																				<tbody>
+																					<tr ng-repeat="dde in dd.dde">
+																						<td>{{dde.ddeOrder + 1}}</td>
+																						<td>{{dde.ddeStartTime}}</td>
+																						<td>{{Days[dde.ddeStartDay] | limitTo: 3}}</td>
+																						<td>{{(dde.sp.startPilot)?dde.sp.startPilot:"---"}}</td>
+																						<td>{{(dde.sp.spStation)?dde.sp.spStation:"---"}}</td>
+																						<td>{{(dde.sp.spToStation)?dde.sp.spToStation:"---"}}</td>
+																						<td>{{(dde.sp.spDistance)?dde.sp.spDistance:"---"}}</td>
+																						<td><b>{{dde.ds.dsTrain}}</b></td>
+																						<td><b>{{dde.ds.dsFrom}}</b></td>
+																						<td><b>{{dde.ds.dsTo}}</b></td>
+																						<td>{{Days[dde.ds.dsTrainOriginDay] | limitTo: 3}}</td>
+																						<td>{{dde.ds.dsDistance}}</td>
+																						<td>{{(dde.ep.endPilot)?dde.ep.endPilot:"---"}}</td>
+																						<td>{{(dde.ep.epFromStation)?dde.ep.epFromStation:"---"}}</td>
+																						<td>{{(dde.ep.epStation)?dde.ep.epStation:"---"}}</td>
+																						<td>{{(dde.ep.epDistance)?dde.ep.epDistance:"---"}}</td>
+																						<td>{{dde.ddeEndTime}}</td>
+																						<td>{{Days[dde.ddeEndDay] | limitTo: 3}}</td>
+																					</tr>
+																				</tbody>
+																			</table></td>
+																		<td>{{dd.ddSignOff}}</td>
+																		<td>{{Days[dd.ddSignOffDay] | limitTo: 3}}</td>
+																	</tr>
+																</tbody>
+															</table></td>
+														<td>{{rt.rtOSRest | time:'mm':'hhh mmm':false}}</td>
+														<td>{{rt.hqRest | time:'mm':'hhh mmm':false}}</td>
+													</tr>
+												</tbody>
+												<tbody ng-show="isLoadingCrewLink" class="ng-hide">
+													<tr style="height: 200px">
+														<td colspan="12" class="text-center"><i
+															class="fa fa-spinner fa-3x fa-pulse"> </i> Loading Crew
+															Link...</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary btn-sm"
+						ng-csv="getCrewLinkCSVRecords(crewLinkPlan,crewLink.data.length,selectedCrewLink,false)"
+						csv-header="getCrewLinkCSVHeader()"
+						filename="{{crewlinkDetails.linkname}}.csv">Export To CSV</button>
+					<button type="button" class="btn btn-primary btn-sm"
+						ng-csv="getCrewLinkCSVRecords(crewLinkPlan,crewLink.data.length,selectedCrewLink,true)"
+						csv-header="getCrewLinkCSVHeader()"
+						filename="{{crewlinkDetails.linkname}}-Summary.csv">Export
+						To CSV With Summary</button>
+					<button type="button" class="btn btn-warning btn-sm"
+						ng-click="getPdf(crewLinkPlan,crewLink.data.length,selectedCrewLink)">Export
+						to PDF</button>
+					<button type="button" class="btn btn-danger btn-sm"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div id="crewLinkAnalysisModel" class="modal fade" role="dialog">
+		<div class="modal-dialog crewlink-view-modal-custom">
+
+			<!-- Modal content-->
+			<div class="modal-content ">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Crew Link Analysis Chart</h4>
+				</div>
+				<div class="col-lg-12">
+					<div ng-show="isCrewLinkAnalysisChartLoading || isLoadingCrewLink">
+						<table>
+							<tbody>
+								<tr style="height: 200px">
+									<td class="text-center"><i
+										class="fa fa-spinner fa-3x fa-pulse"> </i> Loading Crew Link
+										Analysis Chart .....</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div id="crewLinkAnalysisChartDiv" ng-if="crewLink.data">
+						<crew-link-analysis-chart crew-link="crewLink" chart-id="'crewLinkAnalysisChart'"></crew-link-analysis-chart>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div id="linksComparison" class="modal fade" role="dialog">
+		<div class="modal-dialog crewlink-view-modal-custom">
+
+			<!-- Modal content-->
+			<div class="modal-content ">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Crew Links Comparison Chart
+					</h4>
+				</div>
+				<div class="col-lg-12">
+					<div style="margin-top:10px">
+						<button class="btn btn-sm btn-primary pull-right">
+							<i class="fa fa-sort-amount-desc" aria-hidden="true" ng-click="toggleCrewLinkCompChartSortOrder($event)"></i>
+						</button>
+						<select ng-model="crewLinkCompChartSortBy" class="form-control input-sm pull-right" style="width: 165px;"
+							ng-options="crewLinkCompChartSort as crewLinkCompChartSort.name for crewLinkCompChartSort in crewLinkCompChartSortList"
+							ng-change="sortCrewLinkCompChart()">
+							<option value="" selected="selected">Sort by</option>
+						</select>
+					</div>
+					<div ng-if="isLoadCrewLinksComp">
+					<matho-chart chart-type="c3" update-wait="1000" reload="reloadCrewLinksComp" 
+							server-load-model="crewLinks" 
+							server-post-load="postLoadingCrewLinksComp"
+							no-data-processing="true"> 
+						</matho-chart>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

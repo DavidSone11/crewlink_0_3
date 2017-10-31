@@ -1,0 +1,107 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">List Of Stations</h1>
+		</div>
+	</div>
+	
+	<div class=row>
+	<div class="col-md-6 col-md-offset-2">
+	<div ng-show="!hasAdmin">
+	<div class="alert alert-info text-center">
+  			<strong>NOTE :</strong> <strong style="font-family:times new roman">To Create New Station please  Send Mail To Admin</strong>
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					List Of Stations
+					<div class="input-group pull-right">
+
+							<label class="control-label"> Items Per Page (1-100) </label>
+						<input name="itemsperpage" class="input-sm form-control pull-right" min=1
+							max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" st-pipe="serverFetch.process"
+						st-table="stations">
+						<thead>
+							<tr>
+								<th st-ratio="5">S.No.</th>
+								<th st-ratio="15" st-sort="code">Station Code</th>
+								<th st-ratio="30" st-sort="name">Station Name</th>
+								<th st-ratio="10" st-sort="headStationSignOnDuration">HQ Sign On(min.)</th>
+								<th st-ratio="10" st-sort="headStationSignOffDuration">HQ Sign Off(min.)</th>
+								<th st-ratio="10" st-sort="outStationSignOnDuration">OS Sign On(min.)</th>
+								<th st-ratio="10" st-sort="outStationSignOffDuration">OS Sign Off(min.)</th>
+								<th st-ratio="5" ng-show="hasAdmin">Actions</th>
+							</tr>
+							<tr>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="90" st-search="code"
+									placeholder="Station Code" st-delay="1000" /></th>
+
+								<th><input type="text" st-ratio="90" st-search="name"
+									placeholder="Station Name" st-delay="1000" /></th>
+
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+
+								<th>&nbsp;</th>
+
+							</tr>
+						</thead>
+							<tbody ng-show="!isLoading && (itemsPerPage)" >
+							<tr ng-repeat="station in stations">
+									<td>{{(itemsPerPage)? ((currentPage * itemsPerPage + $index +1)-itemsPerPage ):''}} </td>
+								<td>{{station.code}}</td>
+								<td>{{station.name}}</td>
+								<td>{{station.headStationSignOnDuration}}</td>
+								<td>{{station.headStationSignOffDuration}}</td>
+									<td>{{station.outStationSignOnDuration}}</td>
+								<td>{{station.outStationSignOffDuration}}</td>
+								<td><a class="btn btn-xs btn-warning fa fa-edit"
+									ng-click="selectStation(station)" title="Edit" ng-show="hasAdmin"> </a> <a
+									class="btn btn-xs btn-danger fa fa-remove"
+									ng-click="removeStation(station)" ng-show="hasAdmin"
+									confirm="Are you sure to delete station '{{station.code}} - {{station.name}}' !!!"
+									confirm-settings="{size: 'md'}"
+									confirm-header-class="confirm-header-danger "
+									confirm-footer-class="confirm-footer-default"
+									confirm-ok-button-class="btn-danger"
+									confirm-cancel-button-class="btn-default"
+									confirm-title="Confirm Deletion!!" confirm-ok="Yes"
+									confirm-cancel="No" title="Remove"> </a></td>
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr>
+								<td colspan="8" class="text-center"><i
+									class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Trains...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="8" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div ng-show="!hasAdmin"><h5 class="mailClass">To Create Station Send Mail To Admin</h5></div> -->
+	<station-form stationdetails="selectedStation" ng-show="hasAdmin"></station-form>
+	 <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+</div>
+

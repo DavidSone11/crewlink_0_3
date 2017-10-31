@@ -1,0 +1,46 @@
+
+<div>
+	<table class="table table-striped" id="dragtable"
+		style="position: absolute; z-index: -1; font-weight: bold;">
+		<tbody ng-show="selectedRoundTripsToDragLength == 0">
+			<tr class="ng-scope selected-train-section">
+				<td ng-repeat="head in conf.heads">{{(conf.selectedRoundTripsForDragAndDropTable[dragIndex])[head]}}</td>
+			</tr>
+		</tbody>
+		<tbody ng-show="selectedRoundTripsToDragLength > 0">
+			<tr ng-repeat="selectedRoundTrip in selectedRoundTripsToDrag" class="ng-scope selected-train-section">
+				<td ng-repeat="d in conf.heads"><span>{{selectedRoundTrip[d]}}</span></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th st-ratio="5">S.No.</th>
+				<th st-ratio="10">Rt Name</th>
+				<th st-ratio="10">Sign On Time</th>
+				<th st-ratio="10">Sign On Day</th>
+				<th st-ratio="7">Base Station</th>
+				<th st-ratio="10">Sign Off Time</th>
+				<th st-ratio="10">Sign Off Day</th>
+				<th st-ratio="10">Available Time</th>
+				<th st-ratio="10">Available Day</th>
+				<th st-ratio="10">Duration</th>
+				<th st-ratio="10">KM</th>
+				<th st-ratio="7">OS Rest</th>
+				<th st-ratio="7">HQ Rest</th>
+				<th st-ratio="5">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="selectedRoundTrip in conf.selectedRoundTripsForDragAndDropTable" draggable drag="handleDrag"
+				dragImage="{{dragImageId}}" dragData="{{$index}}" droppable
+				drop="handleDrop" ng-click="selectOrDeselectRoundTripToDrag($index);" ng-class="selectedRoundTrip.cssClass" style="cursor: move">
+				<td><span>{{$index+1}}</span></td>
+				<td ng-repeat="d in conf.heads"><span>{{selectedRoundTrip[d]}}</span></td>
+				<td><button class="btn btn-xs btn-danger" ng-click="unSelectRoundTrip($index)"><i class="fa fa-remove"></i></button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

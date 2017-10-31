@@ -1,0 +1,134 @@
+<div class="row">
+	<div class="col-lg-12">
+			<div class="col-lg-2">
+				<h3>{{(traindetails._links.self)?'Update':'Create'}} Train</h3>
+			</div>
+			<div class="col-lg-3">
+				<h3>
+					<input type="button" class="btn btn-primary btn-sm"
+						ng-show="(traindetails._links.self)" ng-click="reset();clearInput('');"
+						value="Create New Train" />
+				</h3>
+			</div>
+	</div>
+
+	<div class="col-lg-12" id="trainFormDiv">
+		<form role="form" name="trainForm" ng-class="submitClass" novalidate
+			ng-submit="trainForm.$valid && saveTrain(traindetails,(traindetails._links.self)?'update':'create' )">
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label class="control-label">Train No </label> <input type="number"
+						name="trainno" ng-required="true" ng-minlength="3"
+						ng-maxlength="8" class="form-control"
+						ng-model="traindetails.trainNo"> <span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && trainForm.trainno.$dirty && trainForm.trainno.$invalid)">
+						<span ng-show="trainForm.trainno.$error.required">Train No
+							is required.</span> <span ng-show="trainForm.trainno.$error.number">Train
+							No Should Be A Integer.</span> <span
+						ng-show="trainForm.trainno.$error.minlength">Train No
+							Should be of minimum 3 digits.</span> <span
+						ng-show="trainForm.trainno.$error.maxlength">Train No can
+							not be more than 8 digits.</span>
+					</span>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Train Name</label> <input
+						ng-model="traindetails.name" ng-required="true" name="trainname"
+						type="text" class="form-control"> <span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && trainForm.trainname.$dirty && trainForm.trainname.$invalid)">
+						<span ng-show="trainForm.trainname.$error.required">Train
+							Name is required.</span>
+					</span>
+				</div>
+				<!-- <div class="form-group">
+					<label>Start Day </label> <select
+						ng-options="option for option in data.Days"
+						ng-model="traindetails.startDay" name="startday" ng-required="true" 
+						class="form-control"></select> <span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && trainForm.startday.$dirty && trainForm.startday.$invalid)">
+						<span ng-show="trainForm.startday.$error.required">Start
+							Day is required.</span>
+					</span>
+				</div> -->
+
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+
+					<label class="control-label">From 
+						</label>
+					<angucomplete-alt id="ddlFromStation" placeholder="Search Stations"
+						input-name="fromstation" pause="400"
+						initial-value="traindetails._ref.fromStation"
+						selected-object="fromStationSelected"
+						remote-url-data-field="_embeddedItems"
+						title-field="_ref.station.code"
+						description-field="_ref.station.name"
+						remote-api-handler="getFromStation" minlength="2"
+						input-class="form-control form-control-small"
+						match-class="highlight"></angucomplete-alt>
+
+
+
+					<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') && (submitClass!='hide-errors' && traindetails._ref.fromStation == null)">
+						<span ng-show="traindetails._ref.fromStation == null">From
+							Station is required.</span>
+					</span>
+
+
+
+
+				</div>
+				
+				<div class="form-group">
+
+					<label class="control-label">To 
+					</label>
+					<angucomplete-alt id="ddlToStation" placeholder="Search Stations"
+						input-name="tostation" pause="400"
+						initial-value="traindetails._ref.toStation"
+						selected-object="toStationSelected"
+						remote-url-data-field="_embeddedItems"
+						title-field="_ref.station.code"
+						description-field="_ref.station.name"
+						remote-api-handler="getFromStation" minlength="2"
+						input-class="form-control form-control-small"
+						match-class="highlight"></angucomplete-alt>
+
+
+
+					<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') && (submitClass!='hide-errors' && traindetails._ref.toStation == null)">
+						<span ng-show="traindetails._ref.toStation == null">To
+							Station is required.</span>
+					</span>
+
+
+
+
+				</div>
+				<div class="form-group">
+					<label>Train Type </label> <select class="form-control"
+						ng-model="traindetails._ref.trainType" name="traintype"
+						ng-options="trainType.name for trainType in trainTypes">
+
+					</select> 
+
+				</div>
+				
+			</div>
+			<div class="col-lg-12">
+				<button type="submit" class="btn btn-primary btn-sm"
+					ng-click="submitClass='ng-submitted'">
+					{{(traindetails._links.self)?'Update':'Create'}} Train
+				</button>
+
+				<input type="button" class="btn btn-danger btn-sm" ng-click="reset();clearInput('ddlFromStation');"
+					value="Reset" />
+			</div>
+
+
+		</form>
+	</div>
+</div>

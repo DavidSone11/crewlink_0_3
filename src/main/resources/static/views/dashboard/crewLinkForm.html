@@ -1,0 +1,378 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Create Crew Link</h1>
+		</div>
+
+
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="row">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						List Of Round Trips
+						<div class="input-group pull-right">
+
+							<label class="control-label"> Items Per Page (1-100) </label> <input
+								name="itemsperpage" class="input-sm form-control pull-right"
+								min=1 max=100 value=5 step=1 type="number"
+								ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+						</div>
+
+					</div>
+					<div class="panel-body">
+						<table class="table table-striped" st-table="roundTrips"
+							st-bind-model="{{refreshRoundTrips}}"
+							st-pipe="serverFetchRoundTrips.process;">
+							<thead>
+								<tr>
+									<th st-ratio="5">S.No.</th>
+									<th st-ratio="10">Rt Name</th>
+									<th st-ratio="10">Sign On Time</th>
+									<th st-ratio="10">Sign On Day</th>
+									<th st-ratio="10">Base Station</th>
+									<th st-ratio="10">Sign Off Time</th>
+									<th st-ratio="10">Sign Off Day</th>
+									<th st-ratio="10">Duration</th>
+									<th st-ratio="10">KM</th>
+									<th st-ratio="7">OS Rest</th>
+									<th st-ratio="7">OS</th>
+									<th st-ratio="10" st-sort="crewType">Crew Type</th>
+									<th st-ratio="5">HQ Rest</th>
+								</tr>
+
+								<tr>
+									<th>&nbsp;</th>
+
+									<th><input type="text" st-ratio="90" st-search="rtName"
+										placeholder="RT Name" st-delay="1000" /></th>
+									<th><input type="text" st-ratio="45"
+										st-search="minDepartureTime" placeholder="Min Sign On Time"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDepartureTime" placeholder="Max Sign On Time"
+										st-delay="1000" /></th>
+									<th><select st-ratio="90" st-search="departureDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select></th>
+
+									<th><input type="text" st-ratio="90" st-search="station"
+										placeholder="Station" st-delay="1000" ng-model="stationRT"
+										ng-disabled="stationDisabled" /></th>
+									<th><input type="text" st-ratio="45"
+										st-search="minArrivalTime" placeholder="Min ArrivalTime"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxArrivalTime" placeholder="Max ArrivalTime"
+										st-delay="1000" /></th>
+
+									<th><select st-ratio="90" st-search="arrivalDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select></th>
+
+									<th><input type="text" st-ratio="45"
+										st-search="minDuration" placeholder="Min Duration"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDuration" placeholder="Max Duration"
+										st-delay="1000" /></th>
+
+									<th><input type="text" st-ratio="45"
+										st-search="minDistance" placeholder="Min Distance"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDistance" placeholder="Max Distance"
+										st-delay="1000" /></th>
+									<td>&nbsp;</td>
+									<th><input type="text" st-ratio="90" st-search="os"
+										placeholder="Out Station" st-delay="1000" /></th>
+										
+									<th><select st-ratio="90" st-search="crewType"
+										ng-model="crewType" ng-disabled="crewTypeDisable">
+											<option value="">All</option>
+											<option ng-repeat="crewType in crewTypes"
+												value="{{crewType.id}}">{{ crewType.name }}</option>
+									</select></th>
+									<th>&nbsp;</th>
+								</tr>
+
+							</thead>
+
+							<tbody ui:sortable
+								ng-show="!isroundTripsLoading && (itemsPerPage)">
+								<tr ng-repeat="round in roundTripsList.data"
+									ng-click="roundTripClicked(round)">
+									<td>{{(itemsPerPage)? ((currentPage * itemsPerPage +
+										$index +1)-itemsPerPage ):''}}</td>
+									<td>{{round[roundTripsList.fields.rtName]}}</td>
+									<td>{{round[roundTripsList.fields.departureTime]}}</td>
+									<td>{{Days[round[roundTripsList.fields.departureDay]]}}</td>
+									<td>{{round[roundTripsList.fields.station]}}</td>
+									<td>{{round[roundTripsList.fields.arrivalTime]}}</td>
+									<td>{{Days[round[roundTripsList.fields.arrivalDay]]}}</td>
+									<td>{{round[roundTripsList.fields.duration] |
+										time:'mm':'hhh mmm':false}}</td>
+									<td>{{round[roundTripsList.fields.distance]}}</td>
+									<td>{{round[roundTripsList.fields.totalOutStationRestTime]
+										| time:'mm':'hhh mmm':false}}</td>
+									<td>{{round[roundTripsList.fields.os]}}</td>
+									<td>{{round[roundTripsList.fields.crewType]}}</td>
+									<td>{{round[roundTripsList.fields.estimatedHQRest]}}</td>
+								</tr>
+
+
+							</tbody>
+							<tbody ng-show="isroundTripsLoading">
+								<tr style="height: 200px">
+									<td colspan="11" class="text-center"><i
+										class="fa fa-spinner fa-3x fa-pulse"> </i> Loading Round
+										Trips...</td>
+								</tr>
+							</tbody>
+
+							<tfoot>
+								<tr>
+									<td colspan="11" class="text-center">
+										<div st-items-by-page="itemsPerPage" st-pagination=""
+											st-template="scripts/directives/pagination/pagination.custom.html"></div>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-lg-12" id="selectedRoundTripsTableId">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">Selected Round Trips To Make
+						CrewLink</div>
+					<div class="panel-body">
+						<ang-table conf="selectedRoundTripsTable"></ang-table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">Summary of Crew Links</div>
+					<div class="panel-body">
+						<div>
+							Give Link Name : <input type="text" ng-model="linkName"
+								ng-required="true" />
+						</div>
+						<table class="table table-striped" st-table="crewLinks">
+							<thead>
+								<tr>
+									<th st-ratio="10">Base Station</th>
+									<th st-ratio="10">Dep Time</th>
+									<th st-ratio="10">Dep Day</th>
+									<th st-ratio="6">Total Km</th>
+									<th st-ratio="6">Total Hours</th>
+									<th st-ratio="6">Duty Hrs / 14 Days</th>
+									<th st-ratio="6">Total Duty Hours</th>
+									<th st-ratio="6">% Duty Hours</th>
+									<th st-ratio="6">Total OS Rest</th>
+									<th st-ratio="6">% OS Rest</th>
+									<th st-ratio="6">TotalHQ Rest</th>
+									<th st-ratio="6">% HQ Rest</th>
+									<th st-ratio="6">No Of LP</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>{{crewLinkToSave.baseStation}}</td>
+									<td>{{crewLinkToSave.depTime}}</td>
+									<td>{{crewLinkToSave.depDay }}</td>
+									<td>{{crewLinkToSave.distance}}</td>
+									<td>{{(crewLinkToSave.duration+crewLinkToSave.totalHQRest)?(crewLinkToSave.duration+crewLinkToSave.totalHQRest
+										| time:'mm':'hhh mmm':false):"" }}</td>
+									<td>{{(crewLinkToSave.dutyHrsPer14Days)?(crewLinkToSave.dutyHrsPer14Days |
+										time:'mm':'hhh mmm':false):"" }}</td>
+									<td>{{(crewLinkToSave.dutyHrs)?(crewLinkToSave.dutyHrs |
+										time:'mm':'hhh mmm':false):"" }}</td>
+									<td>{{crewLinkToSave.PercentDutyHrs}}</td>
+									<td>{{(crewLinkToSave.totalOSRest)?(crewLinkToSave.totalOSRest
+										| time:'mm':'hhh mmm':false):"" }}</td>
+									<td>{{crewLinkToSave.PercentOSR}}</td>
+									<td>{{(crewLinkToSave.totalHQRest)?(crewLinkToSave.totalHQRest
+										| time:'mm':'hhh mmm':false):"---"}}</td>
+									<td>{{crewLinkToSave.PercentHQR}}</td>
+
+									<td>{{ crewLinkToSave.totalLocoPilots }}</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<a class="btn btn-primary btn-sm" ng-click="saveCrewLink();">Save</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">Auto generate CrewLink :</div>
+					<div class="panel-body">
+						<form class="form-inline">
+							<div class="col-lg-12">
+								<div class="row">
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>Base Station * : </label> <input ng-model="stationRT" />
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>CrewType * : </label> <select ng-model="crewTypeModel"
+												ng-options="crewType as crewType.name for crewType in crewTypes">
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>Min Hrs Rest for Less than 8 hrs duty(hrs): </label> <select
+												ng-model="minHQRestForLessThen8HrsDuty"
+												ng-options="i for i in range(8,20)">
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>Min Hrs Rest for 8 hrs or More duty(hrs): </label> <select
+												ng-model="minHQRestForMoreThen8HrsDuty"
+												ng-options="i for i in range(12,24)">
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>Min Periodic Rest(hrs): </label> <select ng-model="minPR"
+												ng-options="i for i in range(16,40)">
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>Ideal No. Of Days For PR :</label> <select
+												ng-model="minNoOfDaysForPR"
+												ng-options="i for i in range(5,12)">
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>Max No. Of Days For PR : </label> <select
+												ng-model="maxNoOfDaysForPR"
+												ng-options="i for i in range(5,15)">
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-3">
+										<div class="form-group">
+											<label>Attempt Limit to Minimize Result: </label> <input
+												ng-model="attemptLimit" />
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<button class="btn btn-primary btn-sm"
+										ng-click="autoGenCrewlink()">Auto Genrate Crewlink</button>
+								</div>
+								<!-- rest of form -->
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<form class="form-inline">
+							Crew Usage Analysis :
+							<div class="form-group">
+								<input type="text" ng-model="stationForCrewUsageAnalysis" ng-change="updateCrewUsageAnalysisSearchData()" class="form-control" placeholder="Station Code">
+								&nbsp;&nbsp;&nbsp;
+								<select ng-model="isCrewLinkForCrewUsageAnalysis"  ng-change="updateCrewUsageAnalysisSearchData()">
+										<option value="" selected>All</option>
+										<option value="true">Only With Crew Link</option>
+										<option value="false">Only With Out Crew Link</option>
+								</select>
+								&nbsp;&nbsp;&nbsp;
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadCrewUsageAnalysisChart()">Get Crew Usage</button>
+							</div>
+							<!-- rest of form -->
+						</form>
+					</div>
+					<div class="panel-body" ng-if="isLoadCrewUsageAnalysis">
+						<matho-chart chart-type="c3" update-wait="1000" reload="crewUsageAnalysisReload" 
+							server-load="loadCrewUsageAnalysis" 
+							server-load-model="crewUsageAnalysisSearchData" 
+							server-post-load="postLoading"
+							no-data-processing="true"> 
+						</matho-chart>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<form class="form-inline">
+							Chart for round trips and crew link :
+							<div class="form-group">
+								<select ng-model="selectedCrewLink" class="form-control">
+									<option value="">Choose Crew Link</option>
+									<option value="unusedRoundTrips">Unused Round Trips</option>
+									<option ng-repeat="crewLink in crewLinks.data"
+										value="{{crewLink}}">{{crewLink[crewLinks.fields.linkName]}}</option>
+								</select> No of round trips: <input type="number" id="totalTrains"
+									ng-model="noOfTrainsLimit" class="form-control"
+									placeholder="no of round trips" min="1" style="width: 110px;">
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadRoundTripsChart()">search</button>
+							</div>
+							<!-- rest of form -->
+						</form>
+					</div>
+					<div class="panel-body">
+						<div id="roundTripsChart"></div>
+					</div>
+					<div class="panel-body" ng-if="isChartLoading">
+						<table class="table table-striped">
+							<tbody>
+								<tr>
+									<td colspan="4" class="text-center"><i
+										class="fa fa-spinner fa-4x fa-pulse"> </i> Loading
+										{{chartStationCode}} Round Trips on chart...</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<toaster-container
+		toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+</div>
+

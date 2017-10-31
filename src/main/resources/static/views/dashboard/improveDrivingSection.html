@@ -1,0 +1,197 @@
+<style>
+.table {
+	margin: 0 0 40px 0;
+	width: 100%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	display: table;
+}
+
+@media screen and (max-width: 580px) {
+	.table {
+		display: block;
+	}
+}
+
+.table-row {
+	display: table-row;
+	background: #f6f6f6;
+}
+
+.table-row:nth-of-type(odd) {
+	background: #e9e9e9;
+}
+
+.subItem {
+	display: table-row;
+	background: #efe294;
+}
+
+.subItem:nth-of-type(odd) {
+	background: #94efee;
+}
+
+.table-row.header {
+	font-size: 15px;
+	font-weight: 900;
+	color: #ffffff;
+	background: #ea6153;
+}
+
+.table-row.green {
+	background: #27ae60;
+}
+
+.table-row.blue {
+	background: #2980b9;
+}
+
+@media screen and (max-width: 580px) {
+	.table-row {
+		padding: 8px 0;
+		display: block;
+	}
+}
+
+.cell {
+	padding: 6px 12px;
+	display: table-cell;
+}
+.wd-5{
+	width:5%;
+}
+.wd-10{
+	width:10%;
+}
+.wd-15{
+	width:15%;
+}
+.wd-20{
+	width:20%;
+}
+.wd-30{
+	width:30%;
+}
+.wd-40{
+	width:40%;
+}
+.wd-50{
+	width:50%;
+}
+.wd-60{
+	width:60%;
+}
+.wd-70{
+	width:70%;
+}
+.wd-80{
+	width:80%;
+}
+.wd-90{
+	width:90%;
+}
+.wd-100{
+	width:100%;
+}
+
+@media screen and (max-width: 580px) {
+	.cell {
+		padding: 2px 12px;
+		display: block;
+	}
+}
+</style>
+
+<div class="col-lg-12">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Improvements Suggestion for Driving Sections</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h3>Find Driving Sections which could be combined together</h3>
+			<div>Max Duration for Sections (HH:MM or HH) : &nbsp;&nbsp;
+				<input ng-model="maxDuration" placeholder="HH:MM or HH" />
+			</div>
+			<div>
+				<button class="btn btn-primary fa fa-space-shuttle" ng-click="callDataFetch(maxDuration)">Search</button>
+			</div>
+			<div>
+				&nbsp;
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Suggestions for Driving Sections : 
+					<div class="input-group pull-right">
+						<button type="button" class="btn btn-primary btn-xs  pull-right"
+							ng-csv="getCSVDataRows(searchResult)"
+							csv-header="getCSVHeaders(searchResult)"
+							filename="drivingSection_improvements.csv">Export List To CSV</button>
+					</div>
+					</div>
+				<div class="panel-body">
+					<div class="table">
+						<div class="table-row header green" ng-show="searchResult.data!=null">
+							<div class="cell">S.No.</div>
+							<div class="cell">Train No</div>
+							<div class="cell">
+								<div class="table">
+									<div class="table-row header blue">
+										<div class="cell wd-5">From</div>
+										<div class="cell wd-5">To</div>
+										<div class="cell wd-10">Dep. Time</div>
+										<div class="cell wd-10">Arr. Time</div>
+										<div class="cell wd-10">Duration</div>
+										<div class="cell wd-15">Driving Duty</div>
+										<div class="cell wd-20">Round Trips</div>
+										<div class="cell wd-20">Crew Links</div>
+									</div>
+								</div>
+							</div>
+							<div class="cell">Counts</div>
+							<div class="cell">New Duration</div>
+						</div>
+
+						<div class="table-row" ng-repeat="item in searchResult.data">
+							<div class="cell">{{$index+1}}</div>
+							<div class="cell">{{item[searchResult.fields.trainNo]}}</div>
+							<div class="cell">
+								<div class="table">
+									<div class="table-row">
+										<div class="cell wd-5">{{item[searchResult.fields.ds1From]}}</div>
+										<div class="cell wd-5">{{item[searchResult.fields.ds1To]}}</div>
+										<div class="cell wd-10">{{item[searchResult.fields.ds1StartTime]}}</div>
+										<div class="cell wd-10">{{item[searchResult.fields.ds1EndTime]}}</div>
+										<div class="cell wd-10">{{item[searchResult.fields.ds1Duration]|time:'mm':'hhh mmm':false}}</div>
+										<div class="cell wd-15">{{item[searchResult.fields.ds1DDNames]}}</div>
+										<div class="cell wd-20"><span class="subItem" ng-repeat="it in item[searchResult.fields.ds1RTNames].split('|')">{{it}}</span></div>
+										<div class="cell wd-20"><span class="subItem" ng-repeat="it in item[searchResult.fields.ds1CLNames].split('|')">{{it}}</span></div>
+									</div>
+									<div class="table-row">
+										<div class="cell wd-5">{{item[searchResult.fields.ds2From]}}</div>
+										<div class="cell wd-5">{{item[searchResult.fields.ds2To]}}</div>
+										<div class="cell wd-10">{{item[searchResult.fields.ds2StartTime]}}</div>
+										<div class="cell wd-10">{{item[searchResult.fields.ds2EndTime]}}</div>
+										<div class="cell wd-10">{{item[searchResult.fields.ds2Duration]|time:'mm':'hhh mmm':false}}</div>
+										<div class="cell wd-15">{{item[searchResult.fields.ds2DDNames]}}</div>
+										<div class="cell wd-20"><span class="subItem" ng-repeat="it in item[searchResult.fields.ds2RTNames].split('|')">{{it}}</span></div>
+										<div class="cell wd-20"><span class="subItem" ng-repeat="it in item[searchResult.fields.ds2CLNames].split('|')">{{it}}</span></div>
+									</div>
+								</div>
+							</div>
+							<div class="cell">{{item[searchResult.fields.counts]}}</div>
+							<div class="cell">{{item[searchResult.fields.newDuration]|time:'mm':'hhh mmm':false}}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<toaster-container
+		toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+
+</div>
+

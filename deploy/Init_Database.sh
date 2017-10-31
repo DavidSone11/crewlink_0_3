@@ -1,0 +1,1 @@
+mysql -u crewlink_db --password="crewlink_db" < crewlink_db.sql

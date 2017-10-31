@@ -1,0 +1,155 @@
+<div class="row">
+	<div class="col-lg-12">
+			<div class="col-lg-4">
+				<h3>{{(pilottripdetails._links.self)?'Update':'Create'}} New
+					Pilot Trip</h3>
+			</div>
+			<div class="col-lg-3">
+				<h3>
+					<input type="button" class="btn btn-primary btn-sm"
+						ng-show="(pilottripdetails._links.self)"
+						ng-click="reset();clearInput('');" value="Create New Pilot Trip" />
+				</h3>
+			</div>
+	</div>
+
+	<div class="col-lg-12" id="pilotTripFormDiv">
+		<form role="form" name="pilotTripForm" ng-class="submitClass"
+			novalidate
+			ng-submit="pilotTripForm.$valid && savePilotTrip(pilottripdetails,(pilottripdetails._links.self)?'update':'create' )">
+			<div class="col-lg-6">
+
+				<div class="form-group">
+					<label class="control-label">Pilot Trip Name</label> <input
+						ng-model="pilottripdetails.name" ng-required="true"
+						name="pilotTripname" type="text" class="form-control"> <span
+						style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && pilotTripForm.pilotTripname.$dirty && pilotTripForm.pilotTripname.$invalid)">
+						<span ng-show="pilotTripForm.pilotTripname.$error.required">Pilot
+							Trip Name is required.</span>
+					</span>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">Trip Distance</label> <input
+						type="number" name="distance" ng-required="true" ng-minlength="1"
+						ng-maxlength="8" class="form-control"
+						ng-model="pilottripdetails.distance"> <span
+						style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && pilotTripForm.distance.$dirty && pilotTripForm.distance.$invalid)">
+						<span ng-show="pilotTripForm.distance.$error.required">Trip
+							Distance is required.</span> <span
+						ng-show="pilotTripForm.distance.$error.number"> Trip
+							Distance No Should Be A Integer.</span> <span
+						ng-show="pilotTripForm.distance.$error.minlength"> Trip
+							Distance Should be of minimum 1 digits.</span> <span
+						ng-show="pilotTripForm.distance.$error.maxlength"> Trip
+							Distance Can not be more than 8 digits.</span>
+					</span>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">Trip Duration</label> <input
+						type="number" name="duration" ng-required="true" ng-minlength="1"
+						ng-maxlength="8" class="form-control"
+						ng-model="pilottripdetails.duration"> <span
+						style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && pilotTripForm.duration.$dirty && pilotTripForm.duration.$invalid)">
+						<span ng-show="pilotTripForm.duration.$error.required">Trip
+							Duration is required.</span> <span
+						ng-show="pilotTripForm.duration.$error.number"> Trip
+							Duration No Should Be A Integer.</span> <span
+						ng-show="pilotTripForm.duration.$error.minlength"> Trip
+							Duration Should be of minimum 1 digits.</span> <span
+						ng-show="pilotTripForm.duration.$error.maxlength"> Trip
+							Duration Can not be more than 8 digits.</span>
+					</span>
+				</div>
+
+
+
+
+				<div class="form-group">
+					<label class="control-label">Division</label>
+					<angucomplete-alt id="ddlDivision" placeholder="Search Division"
+						input-name="division" pause="400"
+						initial-value="pilottripdetails._ref.division"
+						selected-object="divisionSelected"
+						remote-url-data-field="_embeddedItems" title-field="name"
+						remote-api-handler="getDivision" minlength="2"
+						input-class="form-control form-control-small"
+						match-class="highlight"></angucomplete-alt>
+					<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') && (submitClass!='hide-errors' && pilottripdetails._ref.division == null)">
+						<span ng-show="pilottripdetails._ref.division == null">Division
+							is required.</span>
+					</span>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+
+					<label class="control-label">From</label>
+					<angucomplete-alt id="ddlFromStation" placeholder="Search Stations"
+						input-name="fromstation" pause="400"
+						initial-value="pilottripdetails._ref.fromStation"
+						selected-object="fromStationSelected"
+						remote-url-data-field="_embeddedItems"
+						title-field="_ref.station.code"
+						description-field="_ref.station.name"
+						remote-api-handler="getStation" minlength="2"
+						input-class="form-control form-control-small"
+						match-class="highlight"></angucomplete-alt>
+					<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') && (submitClass!='hide-errors' && pilottripdetails._ref.fromStation == null)">
+						<span ng-show="pilottripdetails._ref.fromStation == null">From
+							Station is required.</span>
+					</span>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">To </label>
+					<angucomplete-alt id="ddlToStation" placeholder="Search Stations"
+						input-name="tostation" pause="400"
+						initial-value="pilottripdetails._ref.toStation"
+						selected-object="toStationSelected"
+						remote-url-data-field="_embeddedItems"
+						title-field="_ref.station.code"
+						description-field="_ref.station.name"
+						remote-api-handler="getStation" minlength="2"
+						input-class="form-control form-control-small"
+						match-class="highlight"></angucomplete-alt>
+					<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') && (submitClass!='hide-errors' && pilottripdetails._ref.toStation == null)">
+						<span ng-show="pilottripdetails._ref.toStation == null">To
+							Station is required.</span>
+					</span>
+				</div>
+				<div class="form-group">
+					<label>Pilot Type </label> <select class="form-control"
+						ng-model="pilottripdetails._ref.pilotType" ng-required="true"
+						name="pilottype"
+						ng-options="pilotType.name for pilotType in pilotTypes">
+					</select> <span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && pilotTripForm.pilottype.$dirty && pilotTripForm.pilottype.$invalid)">
+						<span ng-show="pilotTripForm.pilottype.$error.required">Pilot
+							Type is required.</span>
+					</span>
+
+				</div>
+
+			</div>
+			<div class="col-lg-12">
+				<button type="submit" class="btn btn-primary btn-sm"
+					ng-click="submitClass='ng-submitted'">
+					{{(pilottripdetails._links.self)?'Update':'Create'}} PilotTrip
+				</button>
+
+				<input type="button" class="btn btn-danger btn-sm"
+					ng-click="reset();clearInput('ddlFromStation');" value="Reset" />
+			</div>
+
+
+		</form>
+	</div>
+</div>

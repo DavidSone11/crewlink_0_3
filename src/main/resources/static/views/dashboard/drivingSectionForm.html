@@ -1,0 +1,241 @@
+<style>
+a:focus, a:hover {
+	text-decoration: none;
+}
+</style>
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Create Driving Section</h1>
+		</div>
+	</div>
+	
+	<!--  List of Trains-->
+	
+	
+		<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+				List Of Trains	
+					<div class="input-group pull-right">
+						<label class="control-label"> Items Per Page (1-100) </label> <input
+							name="itemsperpage" class="input-sm form-control pull-right"
+							min=1 max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPageTrainsList">
+					</div>
+
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" st-pipe="serverFetchTrainsList.process"
+						st-table="trains">
+						<thead st-bind-model="{{refreshTrainList}}">
+							<tr>
+								<th st-ratio="5">Check for Details</th>
+								<th st-ratio="5">S.No.</th>
+								<th st-ratio="8" st-sort="trainNo">Train No</th>
+								<th st-ratio="20" st-sort="name">Train Name</th>
+								<th st-ratio="10" st-sort="startDay">Originating day</th>
+								<th st-ratio="9" st-sort="trainType">Train Type</th>
+								<th st-ratio="20" st-sort="fromStation">Source</th>
+								<th st-ratio="20" st-sort="toStation">Destination </th>
+								<th st-ratio="20" st-sort="hasDrivingSections">Has Driving Sections</th>
+								
+							</tr>
+							<tr>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="100" st-search="trainNo"
+									placeholder="Train No" st-delay="1000" /></th>
+								<th><input type="text" st-ratio="100" st-search="name"
+									placeholder="Train Name" st-delay="1000" /></th>
+								<th><select st-ratio="90" st-search="startDay">
+										<option value="" selected>All</option>
+										<option ng-repeat="day in Days" value="{{day}}">
+                           						 {{ day }}
+                        						</option>
+								</select></th>
+								<th>
+								
+								<select st-search="trainType" st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm">
+                       					 <option value="">
+                           					All
+                       					 </option>
+                        						<option ng-repeat="item in trainTypes" value="{{ item.name }}">
+                           						 {{ item.name }}
+                        						</option>
+                                  </select>
+								
+                    			
+								</th>
+								<th><input type="text" st-ratio="100"
+									st-search="fromStation" placeholder="From Station"
+									st-delay="1000" /><input type="text" st-ratio="100"
+									st-search="passingStation1" placeholder="Passing Station 1"
+									st-delay="1000" /></th>
+								<th><input type="text" st-ratio="100" st-search="toStation"
+									placeholder="To Station" st-delay="1000" />
+									<input type="text" st-ratio="100" st-search="passingStation2"
+									placeholder="Passing Station 2" st-delay="1000" /></th>
+								
+								<th><select st-ratio="100" st-search="hasDrivingSection">
+										<option value="">All</option>
+										<option value="TRUE">With Driving Sections</option>
+										<option value="FALSE" selected>No Driving Sections</option>
+								</select>
+								</th>
+
+							</tr>
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPage)">
+							<tr ng-repeat="trainItem in trains.data" 
+								ng-class="getSelectedTrainCss(trainItem)">
+								<td><a ng-click="getTrainTimeTable(trainItem)" class="btn btn-success btn-xs fa fa-th-list" title="View"></a></td>
+								<td>{{(itemsPerPageTrainsList)? ((currentPage * itemsPerPageTrainsList + $index
+									+1)-itemsPerPageTrainsList ):''}}</td>
+								<td>{{trainItem[3]}}</td>
+								<td>{{trainItem[1]}}</td>
+								<td>{{Days[trainItem[2]] | limitTo : 3}}</td>
+								<td>{{trainItem[6]}}</td>
+								<td>{{trainItem[4]}}</td>
+								<td>{{trainItem[5]}}</td>
+								
+								<td>{{(trainItem[trains.fields.hasDrivingSection])?'Yes':'No'}}</td>
+								
+								
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height:200px">
+								<td colspan="9" class="text-center"><i
+									class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Trains...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="9" class="text-center">
+									<div st-items-by-page="itemsPerPageTrainsList" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!--   End of Trains -->	
+	
+	
+	
+	
+	
+	
+	<div class="row">
+		<div class="col-lg-12">
+			<br /> <br />
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					List of Train Time Table : <strong><span ng-show="selectedTrain.startDay!=''">{{selectedTrain.trainNo}} - {{selectedTrain.startDay}}</span> 
+					<span ng-show="isDrivingSection" class="btn-danger"> : Already Driving Section Exists</span></strong>
+					   <!-- <span class="custom-select-width300 pull-right"
+						style="margin-top: -7px;"
+						custom-select="train as (train.trainNo>0)?train.trainNo+'-'+train.startDay:'' for train in searchTrain($searchTerm) | filter: { name: $searchTerm }"
+						ng-model="selectedTrain"> <span class="pull-left"> <strong>{{
+								train.name }} - {{ train.startDay }}</strong>
+					</span>
+						<div class="clearfix"></div>
+					</span> --> 
+
+				</div>
+				<div class="panel-body">
+					<!-- st-pipe="serverFetch.process" -->
+					<table class="table table-striped" st-pipe="serverFetch.process"
+						st-table="trainStations">
+						<thead st-bind-model="{{selectedTrain}}">
+							<tr>
+								<th st-ratio="5" st-sort="stopNumber">S.No.</th>
+								<th st-ratio="5">Station Code</th>
+								<th st-ratio="20">Station Name</th>
+								<th st-ratio="10">Arrival</th>
+								<th st-ratio="10">Departure</th>
+								<th st-ratio="10">Day</th>
+								<th st-ratio="10">Day of Journey</th>
+								<th st-ratio="10">Distance (in KM)</th>
+								<th st-ratio="10">Journey Duration (in Mins)</th>
+								<th st-ratio="10">Journey Duration (HH:MM)</th>
+								<!-- <th st-ratio="17">Actions</th> -->
+							</tr>
+							<tr>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="90" st-search="station"
+									placeholder="Station Code" st-delay="1000" /></th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<!-- <th>&nbsp;</th> -->
+							</tr>
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPageTrainTimeTable)">
+							<tr ng-repeat="trainStation in trainStations.data"
+								ng-click="rowClicked(trainStation[trainStations.fields.stopNumber]);"
+								ng-class="selectedTrainStations[trainStation[trainStations.fields.stopNumber]].cssClass">
+								<td>{{trainStation[trainStations.fields.stopNumber]}}</td>
+								<td>{{trainStation[trainStations.fields.stationCode]}}</td>
+								<td>{{trainStation[trainStations.fields.stationName]}}</td>
+								<td>{{trainStation[trainStations.fields.arrival]}}</td>
+								<td>{{trainStation[trainStations.fields.departure]}}</td>
+								<td>{{Days[trainStation[trainStations.fields.day]] | limitTo: 3}}</td>
+								<td>{{trainStation[trainStations.fields.dayOfJourney]}}</td>
+								<td>{{trainStation[trainStations.fields.distance]}}</td>
+								<td>{{trainStation[trainStations.fields.duration]}}</td>
+								<td>{{trainStation[trainStations.fields.duration] |
+									time:'mm':'hhh mmm':false}}</td>
+								<!-- <td>
+								<a class="btn btn-sm btn-warning fa fa-edit"
+										ng-click="selectTrainStation(trainStation)"> Edit</a> <a
+										class="btn btn-md btn-danger fa fa-remove"
+										ng-click="removeTrainStation(trainStation)"> Remove</a>
+								</td> -->
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height: 200px">
+								<td colspan="10" class="text-center"><i
+									class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Train Time
+									Table...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="10" class="text-center">
+									<div st-items-by-page="itemsPerPageTrainTimeTable" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+					<a class="btn btn-primary btn-sm"
+						ng-click="saveSections('single');" ng-disable="savingInProcess">Save</a>
+					<a class="btn btn-primary btn-sm" ng-click="saveSections('all');"
+						ng-disable="savingInProcess">Save sections for all days</a> <a
+						class="btn btn-primary btn-sm"
+						ng-click="saveSections('allWithDrivingDuty');"
+						ng-disable="savingInProcess">Save Sections &amp; Duty for All
+						Day</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<toaster-container
+		toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+</div>
+

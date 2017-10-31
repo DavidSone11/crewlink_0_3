@@ -1,0 +1,152 @@
+<div class="row">
+	<div class="col-lg-12">
+			<div class="col-lg-2">
+				<h3>{{(userdetails._links.self)?'Update':'Create'}} User</h3>
+			</div>
+			<div class="col-lg-3">
+				<h3>
+					<input type="button" class="btn btn-primary btn-sm"
+						ng-show="(userdetails._links.self)"
+						ng-click="reset();clearInput('ddlHeadStation');"
+						value="Create New User" />
+				</h3>
+			</div>
+	</div>
+
+	<div class="col-lg-12" id="userFormDiv">
+		<form role="form" name="userForm" ng-class="submitClass" novalidate ng-submit="userForm.$valid && saveUser(userdetails,(userdetails._links.self)?'update':'create' )">
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label class="control-label">User Name </label> <input type="text"
+						name="username" ng-required="true" class="form-control"
+						placeholder="Enter User Name" ng-model="userdetails.username"> 
+						<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && userForm.username.$dirty && userForm.username.$invalid)">
+						<span ng-show="userForm.username.$error.required">User Name
+							is required.</span>
+					</span>
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label">Password</label> <input type="password"
+						name="password" ng-required="true" class="form-control"
+						placeholder="Enter Your Password" ng-model="userdetails.password"> 
+						<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && userForm.password.$dirty && userForm.password.$invalid)">
+						<span ng-show="userForm.password.$error.required">Password Required.</span>
+					</span>
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label">First Name</label> <input
+						placeholder="Enter First Name" ng-model="userdetails.firstName" ng-required="true"
+						name="firstname" type="text" class="form-control"> <span
+						style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && userForm.firstname.$dirty && userForm.firstname.$invalid)">
+						<span ng-show="userForm.firstname.$error.required">First
+							Name is required.</span>
+					</span>
+				</div>
+				<div class="form-group">
+					<label class="control-label" ng-required="true">Last Name</label> <input
+						placeholder="Enter Last Name" type="text" ng-model="userdetails.lastName" class="form-control">
+				</div>
+				<div class="form-group">
+					<label class="control-label">Email</label> <input type="email"
+						name="email" ng-required="true" placeholder="your@email.com"
+						class="form-control" ng-model="userdetails.email" /> <span
+						style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && userForm.email.$dirty && userForm.email.$invalid)">
+						<span ng-show="userForm.email.$error.required">Email is
+							required.</span> <span ng-show="userForm.email.$error.email">Invalid
+							email address.</span>
+					</span>
+				</div>
+			</div>
+			<div class="col-lg-6">
+
+				<div class="form-group">
+					<label>Role </label> <select class="form-control"
+						ng-model="userdetails._ref.role" ng-required="true" name="role"
+						ng-options="role.name for role in roles">
+						<option value="" selected>--Select Role--</option>
+
+					</select> <span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && userForm.role.$dirty && userForm.role.$invalid)">
+
+						<span ng-show="userForm.role.$error.required">User Role is
+							required.</span>
+					</span>
+
+				</div>
+
+
+				<div class="form-group">
+
+					<!-- <label class="control-label">Head Station {{userdetails._ref.headStation == null}}</label> -->
+					<label class="control-label">Subscribe to make CrewLinks for (Base Station)</label> 
+					<angucomplete-alt id="ddlHeadStation" placeholder="Search Stations"
+						input-name="headstation" pause="400"
+						
+						selected-object="headStationSelected"
+						remote-url-data-field="_embeddedItems"
+						title-field="code"
+						description-field="name"
+						remote-api-handler="getHeadStation" minlength="2"
+						input-class="form-control form-control-small"
+						match-class="highlight"></angucomplete-alt>
+
+						<div class="row">
+						<div class="col-md-6">
+						<div ng-repeat="selectheadstation in selectedHeadStation">
+  											
+  											<div class="col-md-6">
+  											<div class="panel-body">
+  											{{selectheadstation.code}}
+  											<a class="btn btn-danger btn-xs glyphicon glyphicon-minus" ng-click="removeheadStation(selectheadstation);"></a>
+  											</div>
+  											</div>
+  											 
+						</div>
+						</div>
+					</div>
+   
+
+				<!-- 	<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') && (submitClass!='hide-errors' && userdetails._ref.station == null)">
+						<span ng-show="userdetails._ref.station == null">Head Station is required.</span>
+					</span> -->
+
+
+
+
+
+				</div>
+
+				<div class="form-group">
+					<label class="control-label">Account Status</label>
+					<div class="checkbox">
+						<label> <input type="checkbox" value="false"
+							ng-model="userdetails.isActive">{{ userdetails.isActive ?
+							'User Is Active':'User Is Not Active' }}
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Mob No.</label> <input type="text"
+						placeholder='Mobile Number' class="form-control"
+						ng-model="userdetails.mobileNo">
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<button type="submit" class="btn btn-primary btn-sm" ng-click="submitClass='ng-submitted'">
+					{{(userdetails._links.self)?'Update':'Create'}} User
+
+				</button>
+				<input type="button" class="btn btn-danger btn-sm"
+					ng-click="reset();clearInput('ddlHeadStation');" value="Reset" />
+					
+			</div>
+		</form>
+	</div>
+</div>

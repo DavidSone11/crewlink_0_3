@@ -1,0 +1,6 @@
+
+
+How to Build Spring boot application
+mvn clean
+mvn package
+ 

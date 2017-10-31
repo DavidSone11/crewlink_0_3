@@ -1,0 +1,178 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">List Of Driving Sections</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					List Of Driving Sections
+					<div class="input-group pull-right">
+
+						<label class="control-label"> Items Per Page (1-100) </label> <input
+							name="itemsperpage" class="input-sm form-control pull-right"
+							min=1 max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" st-pipe="serverFetch.process"
+						st-table="drivingSections">
+						<thead>
+							<tr>
+								<th st-ratio="5" st-sort="trainNo">Train No</th>
+								<th st-ratio="10" st-sort="originDay">Train Start Day</th>
+								<th st-ratio="5" st-sort="drivingSectionOrderNo">Driving Section Order No</th>
+								<th st-ratio="5" st-sort="fromStation">From</th>
+								<th st-ratio="5" st-sort="toStation">To</th>
+								<th st-ratio="10" st-sort="departureDay">Dep Day</th>
+								<th st-ratio="10" st-sort="departureTime">Dep Time</th>
+								<th st-ratio="10" st-sort="arrivalDay">Arrival Day</th>
+								<th st-ratio="10" st-sort="arrivalTime">Arrival Time</th>
+								<th st-ratio="10" st-sort="duration">Duration (in Min.)</th>
+								<th st-ratio="10" st-sort="distance">Distance (in KM.)</th>
+								<th st-ratio="10" st-sort="isDrivingDuty">Is Driving Duty Element</th>
+								<th st-ratio="20" st-sort="isIgnore">Is Ignored</th>
+								<th st-ratio="5">Actions</th>
+							</tr>
+							<tr>
+								<th><input type="text" st-ratio="100" st-search="trainNo"
+									placeholder="Train No" st-delay="1000" /></th>
+								<th><select st-ratio="90" st-search="originDay">
+										<option value="" selected>All</option>
+										<option ng-repeat="day in Days" value="{{day}}">
+                           						 {{ day }}
+                        						</option>
+								</select></th>
+								
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="100" st-search="fromStation"
+									placeholder="From Station Code" st-delay="1000" /></th>
+									
+								<th><input type="text" st-ratio="100" st-search="toStation"
+									placeholder="To Station Code" st-delay="1000" /></th>
+									
+								<th><select st-ratio="90" st-search="departureDay">
+										<option value="" selected>All</option>
+										<option ng-repeat="day in Days" value="{{day}}">
+                           						 {{ day }}
+                        						</option>
+								</select></th>
+								<th><input type="text" st-ratio="45" st-search="minDepartureTime"
+									placeholder="Min Departure Time" st-delay="1000" />
+									<input type="text" st-ratio="45" st-search="maxDepartureTime"
+									placeholder="Max Departure Time" st-delay="1000" /></th>
+								<th><select st-ratio="90" st-search="arrivalDay">
+										<option value="" selected>All</option>
+										<option ng-repeat="day in Days" value="{{day}}">
+                           						 {{ day }}
+                        						</option>
+								</select></th>
+								<th><input type="text" st-ratio="45" st-search="minArrivalTime"
+									placeholder="Min Arrival Time" st-delay="1000" />
+									<input type="text" st-ratio="45" st-search="maxArrivalTime"
+									placeholder="Max Arrival Time" st-delay="1000" /></th>
+								
+								<th><input type="text" st-ratio="45" st-search="minDuration"
+									placeholder="Min Duration" st-delay="1000" />
+									<input type="text" st-ratio="45" st-search="maxDuration"
+									placeholder="Max Duration" st-delay="1000" /></th>
+								<th><input type="text" st-ratio="45" st-search="minDistance"
+									placeholder="Min Distance" st-delay="1000" />
+									<input type="text" st-ratio="45" st-search="maxDistance"
+									placeholder="Max Distance" st-delay="1000" /></th>
+								<th><select st-ratio="90" st-search="isDrivingDuty">
+										<option value="" selected>All</option>
+										<option value="TRUE">Only With Driving Duty</option>
+										<option value="FALSE">Only With Out Driving Duty</option>
+								</select></th>
+								
+								 <th>
+								
+								 <select st-search="isIgnore" st-ratio="120"  ng-model="selectedValue">
+                       					 <option value="">
+                           					All
+                       					 </option>
+                       					 <option value="false" selected>
+                           					Not Ignored
+                       					 </option>
+                       					 <option value="true">
+                           					Ignored
+                       					 </option>
+                                  </select>
+                                
+                                
+                                <div ng-show="selectedValue=='true'">
+                                  <button id="toggle" class="btn btn-primary btn-xs" ng-click="updateNotIgnore()" >
+      									Not Ignored
+    							  </button>
+    							 </div>
+    							<div ng-show="selectedValue=='false'">
+    							   <button id="toggle" class="btn btn-primary btn-xs" ng-click="updateIgnoreAll()">
+      									Ignored All
+    							  </button>
+    							</div>
+    					      </th>
+								
+								
+								
+								<th>&nbsp;</th>
+
+							</tr>
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPage)">
+							<tr ng-repeat="drivingSection in drivingSections.data">
+								<td>{{drivingSection[drivingSections.fields.trainNo]}}</td>
+								<td>{{Days[drivingSection[drivingSections.fields.originDay]] }}</td>
+								<td>{{drivingSection[drivingSections.fields.drivingSectionOrderNo]}}</td>
+								<td>{{drivingSection[drivingSections.fields.fromStation]}}</td>
+								<td>{{drivingSection[drivingSections.fields.toStation]}}</td>
+								<td>{{Days[drivingSection[drivingSections.fields.departureDay]] }}</td>
+								<td>{{drivingSection[drivingSections.fields.departureTime]}}</td>
+								<td>{{Days[drivingSection[drivingSections.fields.arrivalDay]] }}</td>
+								<td>{{drivingSection[drivingSections.fields.arrivalTime]}}</td>
+								
+								<td>{{drivingSection[drivingSections.fields.duration] | time:'mm':'hhh mmm sss':false}} - {{drivingSection[drivingSections.fields.duration]}}</td>
+								<td>{{drivingSection[drivingSections.fields.distance]}}</td>
+								<td>{{(drivingSection[drivingSections.fields.isDrivingDuty])?'Yes':'No'}}</td>
+								<td><input type="checkbox" ng-model="drivingSection[drivingSections.fields.isIgnore]" ng-change="updateDrivingSectionIsIgnore(drivingSection);"
+									ng-init="drivingSection[drivingSections.fields.isIgnore] = (drivingSection[drivingSections.fields.isIgnore]>0)?true:false"/>
+							    </td>
+								
+								
+								<td><a
+									class="btn btn-xs btn-warning fa fa-edit"
+									ui-sref="dashboard.drivingSectionForm({trainNo:drivingSection[drivingSections.fields.trainNo],startDay:Days[drivingSection[drivingSections.fields.originDay]]})"
+									title="Edit"> </a></td>
+									
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height:200px">
+								<td colspan="11" class="text-center"><i
+									class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Driving Sections...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="11" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+				
+
+				
+			</div>
+		</div>
+	</div>
+	 <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+</div>
+

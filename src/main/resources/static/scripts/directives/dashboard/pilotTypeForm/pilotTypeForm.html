@@ -1,0 +1,44 @@
+<div class="row">
+	<div class="col-lg-12">
+			<div class="col-lg-4">
+				<h3>{{(pilottypedetails._links.self)?'Update':'Create'}} New Pilot Type</h3>
+			</div>
+			<div class="col-lg-3">
+				<h3>
+					<button type="button" class="btn btn-primary btn-sm"
+						ng-show="(pilottypedetails._links.self)"
+						ng-click="reset();">
+						 Create New Pilot Type</i>
+					</button>
+					
+				</h3>
+			</div>
+	</div>
+
+	<div class="col-lg-12"  id="pilotTypeFormDiv">
+		<form role="form" name="pilotTypeForm" ng-class="submitClass" novalidate ng-submit="pilotTypeForm.$valid && savePilotType(pilottypedetails,(pilottypedetails._links.self)?'update':'create' )">
+			<div class="col-lg-6">
+				<div class="form-group input-group-sm">
+					<label class="control-label">Pilot Type Name </label> <input type="text"
+						name="pilotTypename" ng-required="true" class="form-control"
+						placeholder="Enter Pilot Type Name" ng-model="pilottypedetails.name"> 
+						<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && pilotTypeForm.pilotTypename.$dirty && pilotTypeForm.pilotTypename.$invalid)">
+						<span ng-show="pilotTypeForm.pilotTypename.$error.required">Pilot Type Name
+							is required.</span>
+					</span>
+				</div>
+				<button type="submit" class="btn btn-primary btn-sm" ng-click="submitClass='ng-submitted'">
+					{{(pilottypedetails._links.self)?'Update':'Create'}} PilotType
+				</button>
+					<button type="button" class="btn btn-danger btn-sm"
+					ng-click="reset();">
+					</i> Reset
+				</button>
+				
+			</div>
+		 
+			
+		</form>
+	</div>
+</div>

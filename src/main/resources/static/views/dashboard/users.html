@@ -1,0 +1,125 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Users</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					List Of Users
+					<div class="input-group pull-right">
+
+						<label class="control-label"> Items Per Page (1-100) </label> <input
+							name="itemsperpage" class="input-sm form-control pull-right"
+							min=1 max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" st-pipe="serverFetch.process"
+						st-table="users">
+						<thead st-bind-model="{{refreshUser}}">
+							<tr>
+								<th st-ratio="5">S.No.</th>
+								<th st-ratio="10" st-sort="username">User Name</th>
+								<th st-ratio="10" st-sort="firstName">First Name</th>
+								<th st-ratio="10" st-sort="lastName">Last Name</th>
+								<th st-ratio="30" st-sort="email">Email</th>
+								<th st-ratio="10" st-sort="password">Password</th>
+								<th st-ratio="7" st-sort="role.name">Role</th>
+								<!-- <th st-ratio="10" st-sort="station.code">Head Station</th> -->
+							    <th st-ratio="10">Subscribe Stations </th>
+								<th st-ratio="10" st-sort="isActive">Active</th>
+								<th st-ratio="5" ng-show="hasAdmin">Actions</th>
+							</tr>
+							<tr>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="90" st-search="username"
+									placeholder="User Name" st-delay="1000" /></th>
+
+								<th><input type="text" st-ratio="90" st-search="firstName"
+									placeholder="First Name" st-delay="1000" /></th>
+
+								<th><input type="text" st-ratio="90" st-search="lastName"
+									placeholder="Last Name" st-delay="1000" /></th>
+
+								<th><input type="text" st-ratio="90" st-search="email"
+									placeholder="Email" st-delay="1000" /></th>
+									
+								<th><input type="text" st-ratio="90" st-search="password"
+									placeholder="password" st-delay="1000" /></th>
+
+								<th><input type="text" st-ratio="90" st-search="role"
+									placeholder="Role" st-delay="1000" /></th>
+
+								<th><!-- <input type="text" st-ratio="90" st-search="station"
+									placeholder="Station" st-delay="1000" /> --></th>
+
+								<th><select st-ratio="90" st-search="isActive">
+										<option value="" selected>All</option>
+										<option value="true">Only Active</option>
+										<option value="false">Ony InActive</option>
+								</select></th>
+								<th>&nbsp;</th>
+
+							</tr>
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPage)">
+							<tr ng-repeat="(key,user) in users">
+								<td>{{(itemsPerPage)? ((currentPage * itemsPerPage + $index
+									+1)-itemsPerPage ):''}}</td>
+								<td>{{user.username}}</td>
+								<td>{{user.firstName}}</td>
+								<td>{{user.lastName}}</td>
+								<td>{{user.email}}</td>
+								<td>{{user.password}}</td>
+								<td>{{user._ref.role.name}}</td>
+								<td>
+									{{user.stations[0].code}} {{user.stations[1].code}}	{{user.stations[2].code}} {{user.stations[3].code}}
+									{{user.stations[4].code}} {{user.stations[5].code}} {{user.stations[6].code}} {{user.stations[7].code}} {{user.stations[8].code}}
+									{{user.stations[9].code}} {{user.stations[10].code}}
+								
+								
+								</td>
+								<td>{{user.isActive?'Active':'InActive'}}</td>
+								<td><button class="btn btn-xs btn-warning fa fa-edit"
+									ng-click="selectUser(user)" title="Edit" ng-show="hasAdmin"> </button> <button
+									class="btn btn-xs btn-danger fa fa-remove"
+									ng-click="removeUser(user)" ng-show="hasAdmin"
+									confirm="Are you sure to delete user : {{user.username}} ?"
+									confirm-settings="{size: 'md'}"
+									confirm-header-class="confirm-header-danger "
+									confirm-footer-class="confirm-footer-default"
+									confirm-ok-button-class = "btn-danger"
+									confirm-cancel-button-class = "btn-default"
+									confirm-title="Confirm Deletion!!" confirm-ok="Yes"
+									confirm-cancel="No" title="remove"> </button></td>
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height:200px">
+								<td colspan="9" class="text-center"><i
+									class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Users...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="9" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-show="!hasAdmin"><h5 class="mailClass">To Create New User Send Mail To Admin</h5></div>
+	<user-form userdetails="selectedUser" ng-show="hasAdmin"></user-form>
+	 <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+</div>
+

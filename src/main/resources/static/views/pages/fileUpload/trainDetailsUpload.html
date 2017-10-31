@@ -1,0 +1,84 @@
+<div class="container-fluid">
+    <div class="row">
+     <!-- <div class="col-lg-6">
+            <h1 class="page-header">Upload Station Details</h1>
+            <div flow-init="{target: '/uploadStationDetails',testChunks:false}"
+                 flow-files-submitted="$flow.upload()"
+                 flow-file-success="$file.msg = $message">
+
+                 <input type="file" flow-btn/>
+
+
+                Input OR Other element as upload button
+                <span class="btn" flow-btn>Upload File</span>
+
+                <table>
+                    <tr ng-repeat="file in $flow.files">
+                        <td>{{$index+1}}</td>
+                        <td>{{file.name}}</td>
+                        <td>{{file.msg}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div> -->
+  <!--       <div class="col-lg-6">
+            <h1 class="page-header">Upload Train With Start Day</h1>
+            <div flow-init="{target: '/uploadTrainDetailsStartDay',testChunks:false}"
+                 flow-files-submitted="$flow.upload()"
+                 flow-file-success="$file.msg = $message">
+
+                 <input type="file" flow-btn/>
+
+
+                Input OR Other element as upload button
+                <span class="btn" flow-btn>Upload File</span>
+
+                <table>
+                    <tr ng-repeat="file in $flow.files">
+                        <td>{{$index+1}}</td>
+                        <td>{{file.name}}</td>
+                        <td>{{file.msg}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div> -->
+        <div class="col-lg-6">
+            <h1 class="page-header">Upload Train Details</h1>
+            <div flow-init="{target: '/uploadTrainDetails',testChunks:false}"
+                 flow-files-submitted="$flow.upload()"
+                 flow-file-success="$file.msg = $message">
+
+                <input type="file" flow-btn/>
+                Input OR Other element as upload button
+                <span class="btn" flow-btn>Upload File</span>
+
+                <table>
+                    <tr ng-repeat="file in $flow.files">
+                        <td>{{$index+1}}</td>
+                        <td>{{file.name}}</td>
+                        <td>{{file.msg}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <h1 class="page-header">Upload Train Time Table</h1>
+            <div flow-init="{target: '/uploadTrainTimeTable',testChunks:false}"
+                 flow-files-submitted="$flow.upload()"
+                 flow-file-success="$file.msg = $message">
+
+                <input type="file" flow-btn/>
+                Input OR Other element as upload button
+                <span class="btn" flow-btn>Upload File</span>
+
+                <table>
+                    <tr ng-repeat="file in $flow.files">
+                        <td>{{$index+1}}</td>
+                        <td>{{file.name}}</td>
+                        <td>{{file.msg}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

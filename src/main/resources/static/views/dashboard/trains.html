@@ -1,0 +1,178 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">List Of Trains</h1>
+		</div>
+	</div>
+	
+	<div class=row>
+	<div class="col-md-6 col-md-offset-3">
+	<div ng-show="!hasAdmin">
+	<div class="alert alert-info text-center" style="border-radius:0px">
+  			<strong>NOTE :</strong> <strong style="font-family:times new roman">To Create New Train please  Send Mail To Admin</strong>
+	</div>
+	</div>
+	</div>
+	</div>
+	
+	
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+				List Of Trains	
+					<div class="input-group pull-right">
+						<label class="control-label"> Items Per Page (1-100) </label> <input
+							name="itemsperpage" class="input-sm form-control pull-right"
+							min=1 max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+
+				</div>
+				<div class="panel-body">
+					<table class="table table-striped" st-pipe="serverFetch.process"
+						st-table="trains">
+						<thead>
+							<tr>
+								<th st-ratio="5">Check for Details</th>
+								<th st-ratio="5">S.No.</th>
+								<th st-ratio="8" st-sort="trainNo">Train No</th>
+								<th st-ratio="20" st-sort="name">Train Name</th>
+								<th st-ratio="5" st-sort="noOfDaysTrainRuns">No of Days</th>
+								<th st-ratio="20" st-sort="days">Originating days</th>
+								<th st-ratio="9" st-sort="trainType">Train Type</th>
+								<th st-ratio="20" st-sort="fromStation">Source</th>
+								<th st-ratio="20" st-sort="toStation">Destination </th>
+								<th st-ratio="20" st-sort="hasDrivingSection">Has Driving Section </th>
+								<th st-ratio="20" st-sort="isUserSelected">Is User Selected </th>
+								<th st-ratio="5" ng-show="hasAdmin">Actions</th>
+							</tr>
+							<tr>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th><input type="text" st-ratio="100" st-search="trainNo"
+									placeholder="Train No" st-delay="1000" /></th>
+								<th><input type="text" st-ratio="100" st-search="name"
+									placeholder="Train Name" st-delay="1000" /></th>
+								<th>&nbsp;</th>
+								<th>&nbsp;</th>
+								<th>
+								
+								<select st-search="trainType" st-input-event="change" st-delay=0 ng-model="dummy" class="form-control input-sm">
+                       					 <option value="">
+                           					All
+                       					 </option>
+                        						<option ng-repeat="item in trainTypes" value="{{ item.name }}">
+                           						 {{ item.name }}
+                        						</option>
+                                  </select>
+								
+                    			
+								</th>
+								<th><input type="text" st-ratio="100"
+									st-search="fromStation" placeholder="From Station"
+									st-delay="1000" /><input type="text" st-ratio="100"
+									st-search="passingStation1" placeholder="Passing Station 1"
+									st-delay="1000" /></th>
+								<th><input type="text" st-ratio="100" st-search="toStation"
+									placeholder="To Station" st-delay="1000" />
+									<input type="text" st-ratio="100" st-search="passingStation2"
+									placeholder="Passing Station 2" st-delay="1000" /></th>
+								<th><select st-search="hasDrivingSection" st-ratio="100">
+                       					 <option value="">
+                           					All
+                       					 </option>
+                       					 <option value="false" selected>
+                           					No Driving Section
+                       					 </option>
+                       					 <option value="true">
+                           					With Driving Section
+                       					 </option>
+                                  </select></th>
+                                <th><select st-search="isUserSelected" st-ratio="100" ng-model="selectedValue">
+                       					 <option value="" selected>
+                           					All
+                       					 </option>
+                       					 <option value="false">
+                           					Not Selected By User
+                       					 </option>
+                       					 <option value="true">
+                           					Selected By User
+                       					 </option>
+                                  </select>
+                                  
+                                 <div ng-show="selectedValue=='true'">
+                                  <button id="toggle" class="btn btn-primary btn-xs" ng-click="updateDeselectAll()" >
+      									Deselect All
+    							  </button>
+    							 </div>
+    							<div ng-show="selectedValue=='false'">
+    							   <button id="toggle" class="btn btn-primary btn-xs" ng-click="updateSelectAll()">
+      									Select All
+    							  </button>
+    							</div>
+                                 
+                                 
+                                 </th>
+								<th>&nbsp;</th>
+
+							</tr>
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPage)">
+							<tr ng-repeat="trainItem in trains.data">
+								<td><a
+									ui-sref="dashboard.trainTimeTable({trainNo:trainItem[3],startDay:Days[trainItem[2]]})"
+									class="btn btn-success btn-xs fa fa-th-list" title="View"></a></td>
+								<td>{{(itemsPerPage)? ((currentPage * itemsPerPage + $index
+									+1)-itemsPerPage ):''}}</td>
+								<td>{{trainItem[trains.fields.trainNo]}}</td>
+								<td>{{trainItem[trains.fields.name]}}</td>
+								<td>{{trainItem[trains.fields.noOfDaysTrainRuns]}}</td>
+								<td><span ng-repeat="day in trainItem[trains.fields.days].split(';')">{{Days[day] | limitTo: 3}} </span></td>
+								<td>{{trainItem[trains.fields.trainType]}}</td>
+								<td>{{trainItem[trains.fields.fromStationCode]}}</td>
+								<td>{{trainItem[trains.fields.toStationCode]}}</td>
+								<td ng-init="trainItem[trains.fields.hasDrivingSection] = (trainItem[trains.fields.hasDrivingSection]>0)?true:false">
+								{{(trainItem[trains.fields.hasDrivingSection])?'Yes':'No'}}</td>
+								<td><input type="checkbox" ng-model="trainItem[trains.fields.isUserSelected]" ng-change="changeTrainFromUser(trainItem);"
+									ng-init="trainItem[trains.fields.isUserSelected] = (trainItem[trains.fields.isUserSelected]>0)?true:false"/>
+									</td>
+								<td><a class="btn btn-xs btn-warning fa fa-edit" title="Edit"
+									ng-click="selectTrain(trainItem[trains.fields.id])" ng-show="hasAdmin"> </a> <a
+									class="btn btn-xs btn-danger fa fa-remove"
+									ng-click="removeTrain(trainItem[trains.fields.id])" ng-show="hasAdmin"
+									confirm="Are you sure to delete Train: '{{trainItem[trains.fields.trainNo]}}-{{trainItem[trains.fields.startDay]}}' !!!"
+									confirm-settings="{size: 'md'}"
+									confirm-header-class="confirm-header-danger "
+									confirm-footer-class="confirm-footer-default"
+									confirm-ok-button-class="btn-danger"
+									confirm-cancel-button-class="btn-default"
+									confirm-title="Confirm Deletion!!" confirm-ok="Yes"
+									confirm-cancel="No" title="Remove"> </a></td>
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height:200px">
+								<td colspan="11" class="text-center"><i
+									class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Trains...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="9" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<train-form traindetails="selectedTrain" ng-show="hasAdmin"></train-form>
+	 <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+</div>
+

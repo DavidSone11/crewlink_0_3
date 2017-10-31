@@ -1,0 +1,119 @@
+
+.tickLines path.inactive,.existingConnectedLines path.inactive,.newConnectedLines path.inactive{
+  stroke: #ccc;
+  stroke-opacity: .5;
+}
+
+.toStation ,.fromStation,.legendCircle,.legendText,.trainsChartText{
+	cursor: pointer;
+	text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+	font-size: 12px;
+}
+
+.fromStationRect,.toStationRect,.allFromStationsRect,.allToStationsRect{
+	cursor: pointer;
+}
+
+.headingtext{
+	font-size: 14px;
+	font-weight : 600;
+}
+
+.chartHeading{
+	font-size: 20px;
+	font-weight : 600;
+}
+
+.active{
+	font-size: 12px;
+	font-weight : 600;
+}
+
+.inactive{
+  stroke: #ccc;
+  stroke-opacity: .5;
+}
+
+.tickDetails , .fromStationButton, .toStationButton{
+	cursor: pointer;
+	text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+	font-size: 12px;
+}
+
+
+.tooltip {
+	padding: 12px;
+	border-radius: 5px;
+	margin: 2px;
+	color: blue;
+	height: auto;
+	width: auto;
+	opacity: 1;
+	box-shadow: 0px 0px 20px rgba(94, 80, 80, 0.99);
+	background-color: white;
+}
+
+.background path {
+	fill: none;
+	stroke: none;
+	stroke-width: 20px;
+	pointer-events: stroke;
+	shape-rendering: crispEdges;
+}
+
+.foreground path {
+	fill: none;
+}
+
+.axis .title {
+	font-size: 11px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.axis line, .axis path,.y-axis line, .y-axis path {
+	fill: black;
+	shape-rendering: crispEdges;
+}
+
+.axis.string {
+	font-size: 6px;
+}
+
+.d3legend {
+	cursor: pointer;
+	font-size: small;
+}
+.activeLegend{
+	font-weight: bold;
+}
+.daystext {
+	font-size: 14px;
+}
+
+.foreground path.inactive {
+	stroke: #ccc;
+	stroke-opacity: .5;
+}
+
+.foreground text {
+	text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+.tooltip {
+	position: absolute;
+	pointer-events: none;
+}
+
+.foreground {
+	font: 13px verdana;
+}
+
+.foreground.active {
+	font: 20px arial bold;
+}
+
+.newline {
+	stroke: black;
+	fill: none;
+}

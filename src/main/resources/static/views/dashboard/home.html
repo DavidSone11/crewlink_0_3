@@ -1,0 +1,70 @@
+<div>
+    <div class="row">
+        <div class="col-md-10">
+            <h1 class="page-header">Dashboard</h1>
+        </div>
+        <div class="col-md-2">
+            <h1><button class="btn btn-primary page-header" ng-click="goToUserPlans()">Change User Plan</button></h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+
+        
+        <stats number="{{dashboardItems.pTrains}}" comments="Pending Trains" colour="primary" type="train" goto="dashboard.trains"></stats>
+        <stats number="{{dashboardItems.pDrivingSections}}" comments="Pending Driving Sections" colour="green" goto="dashboard.drivingSection" type="sliders"></stats>
+        <stats number="{{dashboardItems.pDrivingDuties}}" comments="Pending Driving Duty" colour="yellow" goto="dashboard.drivingDuty" type="random"></stats>
+        <stats number="{{dashboardItems.pRoundTrips}}" comments="Pending Round Trip" goto="dashboard.roundTrip" colour="red" type="retweet"></stats>
+    </div>
+    <div class="row">
+    	<stats number="{{dashboardItems.cCrewlink}}" comments="Completed Crew Links" goto="dashboard.crewLink" colour="orange" type="repeat"></stats>
+    </div>
+    <div class="row">
+    	<label>Selected Station Report :</label><input ng-model="station" placeholder="Link Base Station" /> &nbsp;&nbsp;<button class="fa fa-space-shuttle" ng-click="fetchData()"></button> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;Current Selected Station : <b>{{(selectedStation=="")?"All Stations":selectedStation}}</b>
+    </div>
+    <div class="row">
+    	<stats number="{{dashboardItems.noOfLocoPilots | number}}" comments="Total No. of Loco Pilots" goto="dashboard.crewLink" colour="primary" type="group"></stats>
+    	<stats number="{{(dashboardItems.totalKM/dashboardItems.noOfLocoPilots)/7 | number:1}}" comments="KM / LP / Day" goto="dashboard.crewLink" colour="orange" type="tasks"></stats>
+    	<stats number="{{dashboardItems.totalKM | number}}" comments="Total Link KM (per week)" goto="dashboard.crewLink" colour="yellow" type="dashboard"></stats>
+    	<stats number="{{dashboardItems.pilotKM | number}} ({{(dashboardItems.pilotKM/dashboardItems.totalKM)*100 | number : 2}}%)" comments="Pilot KM" goto="dashboard.crewLink" colour="red" type="truck"></stats>
+    	<stats number="{{dashboardItems.trainKM | number}}" comments="Train KM (per week)" goto="dashboard.crewLink" colour="green" type="flag-checkered"></stats>
+    	<stats number="{{dashboardItems.noOfRTPerMonthPerCrew | number:2}}" comments="No. of Round Trips / Month / Crew" goto="dashboard.crewLink" colour="yellow" type="gears"></stats>
+    	<stats number="{{dashboardItems.avgDutyHrsPer14Days | number:2}}" comments="Avg. Duty Hrs / 14 Days" goto="dashboard.crewLink" colour="primary" type="road"></stats>
+    	<stats number="{{dashboardItems.pAvgDutyHrs | number:2}}" comments="% Avg. Duty Hrs" goto="dashboard.crewLink" colour="red" type="road"></stats>
+    	<stats number="{{dashboardItems.pAvgOSR | number:2}}" comments="% Avg. Out Station Rest" goto="dashboard.crewLink" colour="orange" type="coffee"></stats>
+    	<stats number="{{dashboardItems.pAvgHQR | number:2}}" comments="% Avg. Head Quater Rest" goto="dashboard.crewLink" colour="green" type="home"></stats>
+    </div>
+    
+    <!-- /.panel -->
+    <!-- <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-clock-o fa-fw"></i> Responsive Timeline
+                </div>
+                /.panel-heading
+                <timeline></timeline>
+                /.panel-body
+            </div>
+            /.panel
+        </div>
+        /.col-lg-8
+        <div class="col-lg-4">   
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bell fa-fw"></i> Notifications Panel
+                </div>
+                /.panel-heading
+                <notifications></notifications> 
+                /.panel-body
+            </div>
+            /.panel
+
+            <chat></chat>
+             /.panel .chat-panel
+        </div>
+        /.col-lg-4
+    </div> -->
+    <!-- /.row -->
+</div>

@@ -1,0 +1,111 @@
+.navbar-brand, .navbar-nav li a {
+	line-height: 60px;
+	height: 60px;
+	padding-top: 0;
+}
+
+@media ( min-width :768px) {
+	.sidebar {
+		margin-top: 61px;
+	}
+}
+
+@media ( min-width : 768px) {
+	.navbar-right {
+		float: right !important;
+		margin-right: -15px;
+		height: 61px;
+		line-height: 30px;
+	}
+}
+.mailClass
+{
+	margin-left:9%;
+	size:12px;
+}
+.page-wrapper-no-margin {
+	margin-left: 0px !important;
+}
+
+#toggle {
+	display: block !important;
+}
+
+.sidebar-toggle-button {
+	margin-left: 30px;
+	margin-top: 64px;
+	position: absolute;
+	z-index: 2;
+}
+
+.header_toggle {
+	position: absolute;
+}
+
+.animate-hide {
+	-webkit-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) .5s;
+	-moz-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) .5s;
+	-o-transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) .5s;
+	transition: all cubic-bezier(0.250, 0.460, 0.450, 0.940) .5s;
+}
+
+.hide-toggle-button {
+	margin-left: -184px;
+}
+
+.hide-sidebar {
+	opacity: 0;
+}
+
+.show-sidebar {
+	opacity: 1;
+}
+
+.animate-hide.ng-hide {
+	line-height: 0;
+	opacity: 0;
+}
+
+@media (min-width: 992px){
+.driving-duty-modal-custom
+{
+    width: 90% !important;
+  	
+}
+@media (min-width: 992px){
+.crewlin-view-modal-custom
+{
+    width: 90% !important;
+  	
+}
+
+@media (min-width: 992px){
+.roundTrip-view-modal-custom
+{
+    width: 70% !important;
+  	
+}
+
+@media (min-width: 992px){
+.view-modal-custom-90
+{
+    width: 100% !important;
+  	
+}
+
+}
+
+@media (min-width: 992px){
+.crewlink-view-modal-custom
+{
+    width: 90% !important;
+  	
+}
+
+@media (min-width: 992px){
+    .drivingdutyTrainNo_and_Pilot{
+        width:95% !important;
+    }
+}
+
+}

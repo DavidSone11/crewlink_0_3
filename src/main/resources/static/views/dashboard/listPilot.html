@@ -1,0 +1,98 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">List Of Pilots</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					List Of Pilots
+					<div class="input-group pull-right">
+
+						<label class="control-label"> Items Per Page (1-100) </label> <input
+							name="itemsperpage" class="input-sm form-control pull-right"
+							min=1 max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+
+				</div>
+
+
+
+
+				<div class="panel-body">
+					<table class="table table-striped"
+						st-pipe="serverFetchPilotTrips.process" st-table="pilotTrips">
+						<thead>
+							<tr>
+								<th st-ratio="5">S.No.</th>
+								<th st-ratio="10" st-sort="name">Trip Name</th>
+								<th st-ratio="20" st-sort="fromStation.code">From</th>
+								<th st-ratio="20" st-sort="toStation.code">To</th>
+								<th st-ratio="20" st-sort="departureDay">Departure Day</th>
+								<th st-ratio="20" st-sort="departureTime">Departure Time</th>
+								<th st-ratio="20" st-sort="arrivalDay">Arrival Day</th>
+								<th st-ratio="20" st-sort="arrivalTime">Arrival Time</th>
+								<th st-ratio="5" st-sort="distance">Distance</th>
+								<th st-ratio="5" st-sort="duration">Duration</th>
+
+
+								<th st-ratio="10" st-sort="pilotType.name">Pilot Type</th>
+								<th st-ratio="10">Action</th>
+							</tr>
+							<tr>
+								
+						</thead>
+						<tbody ng-show="!isLoadingPilotTrips && (itemsPerPage)">
+							<tr ng-repeat="pilotTrip in pilotTrips.data">
+								<td>{{(itemsPerPage)? ((currentPage * itemsPerPage + $index
+									+1)-itemsPerPage ):''}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.pilotTripName]}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.fromStation]}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.toStation]}}</td>
+								<td>{{Days[pilotTrip[pilotTrips.fields.departureDay]]|limitTo:3}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.departureTime]}}</td>
+								<td>{{Days[pilotTrip[pilotTrips.fields.arrivalDay]]|limitTo:3}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.arrivalTime]}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.distance]}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.duration]| time:'mm':'hhh
+									mmm':false}}</td>
+								<td>{{pilotTrip[pilotTrips.fields.pilotType]}}</td>
+								<td><a
+									class="btn btn-xs btn-danger fa fa-remove"
+									ng-click="removePilot(pilotTrip[pilotTrips.fields.id])"
+									confirm="Are you sure to delete Pilot, This will delete Depending Duties?  !!!"
+									confirm-settings="{size: 'md'}"
+									confirm-header-class="confirm-header-danger "
+									confirm-footer-class="confirm-footer-default"
+									confirm-ok-button-class="btn-danger"
+									confirm-cancel-button-class="btn-default"
+									confirm-title="Confirm Deletion!!" confirm-ok="Yes"
+									confirm-cancel="No" title="Remove"> </a></td>
+							</tr>
+						</tbody>
+						<tbody ng-show="isLoadingPilotTrips">
+							<tr>
+								<td colspan="9" class="text-center"><i
+									class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Pilot
+									Trips...</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="5" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<toaster-container
+	toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>

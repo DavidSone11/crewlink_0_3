@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-4">
+				<h3>{{(divisiondetails._links.self)?'Update':'Create'}} New Division</h3>
+			</div>
+			<div class="col-lg-3">
+				<h3>
+					<button type="button" class="btn btn-primary btn-sm"
+						ng-show="(divisiondetails._links.self)"
+						ng-click="reset();">
+						 Create New Division</i>
+					</button>
+					
+				</h3>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-12"  id="divisionFormDiv">
+		<form role="form" name="divisionForm" ng-class="submitClass" novalidate ng-submit="divisionForm.$valid && saveDivision(divisiondetails,(divisiondetails._links.self)?'update':'create' )">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="form-group input-group-sm">
+						<label class="control-label">Division Name </label> <input type="text"
+							name="divisionname" ng-required="true" class="form-control"
+							placeholder="Enter Division Name" ng-model="divisiondetails.name"> 
+							<span style="color: red"
+							ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && divisionForm.divisionname.$dirty && divisionForm.divisionname.$invalid)">
+							<span ng-show="divisionForm.divisionname.$error.required">Division Name
+								is required.</span>
+						</span>
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="btn btn-primary btn-sm" ng-click="submitClass='ng-submitted'">
+				{{(divisiondetails._links.self)?'Update':'Create'}} Division
+			</button>
+				<button type="button" class="btn btn-danger btn-sm"
+				ng-click="reset();">
+				 Reset
+			</button>
+		</form>
+	</div>
+</div>

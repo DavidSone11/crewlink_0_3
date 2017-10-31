@@ -1,0 +1,44 @@
+<div class="row">
+	<div class="col-lg-10 col-lg-offset-1">
+			<div class="col-lg-4">
+				<h3>{{(traintypedetails._links.self)?'Update':'Create'}} New Train Type</h3>
+			</div>
+			<div class="col-lg-3">
+				<h3>
+					<button type="button" class="btn btn-primary btn-sm"
+						ng-show="(traintypedetails._links.self)"
+						ng-click="reset();">
+						 Create New Train Type
+					</button>
+					
+				</h3>
+			</div>
+	</div>
+
+	<div class="col-lg-12"  id="trainTypeFormDiv">
+		<form role="form" name="trainTypeForm" ng-class="submitClass" novalidate ng-submit="trainTypeForm.$valid && saveTrainType(traintypedetails,(traintypedetails._links.self)?'update':'create' )">
+			<div class="col-lg-4 col-lg-offset-1">
+				<div class="form-group input-group-sm">
+					<label class="control-label">Train Type Name </label> <input type="text"
+						name="trainTypename" ng-required="true" class="form-control"
+						placeholder="Enter Train Type Name" ng-model="traintypedetails.name"> 
+						<span style="color: red"
+						ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && trainTypeForm.trainTypename.$dirty && trainTypeForm.trainTypename.$invalid)">
+						<span ng-show="trainTypeForm.trainTypename.$error.required">Train Type Name
+							is required.</span>
+					</span>
+				</div>
+				<button type="submit" class="btn btn-primary btn-sm" ng-click="submitClass='ng-submitted'">
+					{{(traintypedetails._links.self)?'Update':'Create'}} TrainType
+				</button>
+					<button type="button" class="btn btn-danger btn-sm"
+					ng-click="reset();">
+					 Reset
+				</button>
+				
+			</div>
+		 
+			
+		</form>
+	</div>
+</div>

@@ -1,0 +1,314 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">List Of RoundTrip</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					List Of RoundTrip
+					<div class="input-group pull-right">
+
+						<label class="control-label"> Items Per Page (1-100) </label> <input
+							name="itemsperpage" class="input-sm form-control pull-right"
+							min=1 max=100 value=5 step=1 type="number"
+							ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+					</div>
+
+				</div>
+
+
+
+
+				<div class="panel-body">
+					<table class="table table-striped" st-table="roundTripList"
+						st-pipe="serverFetch.process;">
+						<thead>
+							<tr>
+								<th st-ratio="5">S.No.</th>
+								<th st-ratio="10" st-sort="rtName">Rt Name</th>
+								<th st-ratio="10">Sign on</th>
+								<th st-ratio="10">Sign on Day</th>
+								<th st-ratio="5" st-sort="station">Base Station</th>
+								<th st-ratio="7">Sign off</th>
+								<th st-ratio="7">Sign off Day</th>
+								<th st-ratio="7">Avl</th>
+								<th st-ratio="7">Avl Day</th>
+								<th st-ratio="7">Duration</th>
+								<th st-ratio="10" st-sort="distance">KM</th>
+								<th st-ratio="7" st-sort="totalOutStationRestTime">OS Rest</th>
+								<th st-ratio="7">Last Duty Duration</th>
+								<th st-ratio="5">CrewType</th>
+								<th st-ratio="15" st-sort="crewLinkName">Crew Link Name</th>
+								<th st-ratio="7" st-sort="isCrewLink">Is CrewLink</th>
+								<th st-ratio="10">Ignore</th>
+								<th st-ratio="7">Action</th>
+
+							</tr>
+
+							<tr>
+								<th>&nbsp;</th>
+
+								<th><input type="text" st-ratio="90" st-search="rtName"
+									placeholder="RT Name" st-delay="1000" /></th>
+								<th><input type="text" st-ratio="45"
+									st-search="minDepartureTime" placeholder="Min Sign On Time"
+									st-delay="1000" /> <input type="text" st-ratio="45"
+									st-search="maxDepartureTime" placeholder="Max Sign On Time"
+									st-delay="1000" /></th>
+								<th><select st-ratio="90" st-search="departureDay">
+										<option value="" selected>All</option>
+										<option ng-repeat="day in Days" value="{{day}}">{{
+											day }}</option>
+								</select></th>
+
+								<th><input type="text" st-ratio="90" st-search="station"
+									placeholder="Station" st-delay="1000" /></th>
+								<th><input type="text" st-ratio="45"
+									st-search="minArrivalTime" placeholder="Min ArrivalTime"
+									st-delay="1000" /> <input type="text" st-ratio="45"
+									st-search="maxArrivalTime" placeholder="Max ArrivalTime"
+									st-delay="1000" /></th>
+
+								<th><select st-ratio="90" st-search="arrivalDay">
+										<option value="" selected>All</option>
+										<option ng-repeat="day in Days" value="{{day}}">{{
+											day }}</option>
+								</select></th>
+
+								<th><input type="text" st-ratio="45"
+									st-search="minAvailableTime" placeholder="Min Avaiable Time"
+									st-delay="1000" /> <input type="text" st-ratio="45"
+									st-search="maxAvailableTime" placeholder="Max Avaiable Time"
+									st-delay="1000" /></th>
+
+								<th><select st-ratio="90" st-search="availableDay">
+										<option value="" selected>All</option>
+										<option ng-repeat="day in Days" value="{{day}}">{{
+											day }}</option>
+								</select></th>
+								<th><input type="text" st-ratio="45"
+									st-search="minDuration" placeholder="Min Duration"
+									st-delay="1000" /> <input type="text" st-ratio="45"
+									st-search="maxDuration" placeholder="Max Duration"
+									st-delay="1000" /></th>
+								<th><input type="text" st-ratio="45"
+									st-search="minDistance" placeholder="Min Distance"
+									st-delay="1000" /> <input type="text" st-ratio="45"
+									st-search="maxDistance" placeholder="Max Distance"
+									st-delay="1000" /></th>
+								<th></th>
+								<th>&nbsp;</th>
+								<th><select st-ratio="90" st-search="crewType"
+									ng-model="crewType" ng-disabled="crewTypeDisable">
+										<option value="">All</option>
+										<option ng-repeat="crewType in crewTypes"
+											value="{{crewType.id}}">{{ crewType.name }}</option>
+								</select></th>
+								<th><input type="text" st-ratio="90"
+									st-search="crewLinkName" placeholder="Crew Link Name"
+									st-delay="1000" /></th>
+								<th><select st-ratio="90" st-search="isCrewLink">
+										<option value="" selected>All</option>
+										<option value="TRUE">Only With Crew Link</option>
+										<option value="FALSE">Only With Out Crew Link</option>
+								</select></th>
+
+
+								<th><select st-ratio="100" st-search="isIgnore"
+									ng-model="selectedValue">
+										<option value="">All</option>
+										<option value="false" selected>Not Ignored</option>
+										<option value="true">Ignored</option>
+								</select></th>
+
+
+								<div ng-show="selectedValue=='true'">
+									<button id="toggle" class="btn btn-primary btn-xs"
+										ng-click="updateNotIgnore()">Not Ignored</button>
+								</div>
+								<div ng-show="selectedValue=='false'">
+									<button id="toggle" class="btn btn-primary btn-xs"
+										ng-click="updateIgnoreAll()">Ignored All</button>
+								</div>
+
+
+
+
+								</th>
+
+
+
+
+
+							</tr>
+
+						</thead>
+						<tbody ng-show="!isLoading && (itemsPerPage)">
+							<tr ng-repeat="round in roundTripList.data">
+								<td>{{(itemsPerPage)? ((currentPage * itemsPerPage + $index
+									+1)-itemsPerPage ):''}}</td>
+								<td>{{round[roundTripList.fields.rtName]}}</td>
+								<td>{{round[roundTripList.fields.departureTime]}}</td>
+								<!-- sign on time -->
+								<td>{{Days[round[roundTripList.fields.departureDay]]}}</td>
+								<!-- sign on day -->
+								<td>{{round[roundTripList.fields.station]}}</td>
+								<td>{{round[roundTripList.fields.arrivalTime]}}</td>
+								<!-- sign off time -->
+								<td>{{Days[round[roundTripList.fields.arrivalDay]]}}</td>
+								<!-- sign off day -->
+								<td>{{round[roundTripList.fields.availableTime]}}</td>
+								<!-- sign off time -->
+								<td>{{Days[round[roundTripList.fields.availableDay]]}}</td>
+								<td>{{round[roundTripList.fields.duration] | time:'mm':'hhh
+									mmm':false}}</td>
+								<td>{{round[roundTripList.fields.distance]}}</td>
+								<td>{{round[roundTripList.fields.totalOutStationRestTime] |
+									time:'mm':'hhh mmm':false }}</td>
+								<td>{{round[roundTripList.fields.lastDrivingDutyDuration] |
+									time:'mm':'hhh mmm':false}}</td>
+								<td>{{round[roundTripList.fields.crewTypeName]}}</td>
+								<td>{{round[roundTripList.fields.crewLinkName]}}</td>
+								<td>{{(round[roundTripList.fields.isCrewLink])?'Yes':'No'}}</td>
+								<td><input type="checkbox"
+									ng-model="round[roundTripList.fields.isIgnore]"
+									ng-change="updateRoundTripIsIgnore(round);"
+									ng-init="round[roundTripList.fields.isIgnore] = (round[roundTripList.fields.isIgnore]>0)?true:false" />
+								</td>
+
+
+								<td>
+									<button style="margin-bottom: 1px;"
+										class="btn btn-xs btn-warning fa fa-th-list"
+										data-toggle="modal" data-target="#myModal"
+										ng-click="viewDrivingDuty(round)" title="Details"></button> <br />
+									<a class="btn btn-xs btn-danger fa fa-remove"
+									ng-click="removeRoundTrip(round[roundTripList.fields.id])"
+									confirm="Are you sure to delete !!! : {{round[roundTripList.fields.rtName]}}"
+									confirm-settings="{size: 'md'}"
+									confirm-header-class="confirm-header-danger "
+									confirm-footer-class="confirm-footer-default"
+									confirm-ok-button-class="btn-danger"
+									confirm-cancel-button-class="btn-default"
+									confirm-title="Confirm Deletion!!" confirm-ok="Yes"
+									confirm-cancel="No" title="Remove"> </a>
+								</td>
+							</tr>
+
+
+						</tbody>
+						<tbody ng-show="isLoading">
+							<tr style="height: 200px">
+								<td colspan="11" class="text-center"><i
+									class="fa fa-spinner fa-3x fa-pulse"> </i> Loading Round
+									Trips...</td>
+							</tr>
+						</tbody>
+
+						<tfoot>
+							<tr>
+								<td colspan="11" class="text-center">
+									<div st-items-by-page="itemsPerPage" st-pagination=""
+										st-template="scripts/directives/pagination/pagination.custom.html"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<toaster-container
+		toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+
+
+
+
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog roundTrip-view-modal-custom">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Driving Duty</h4>
+				</div>
+
+
+
+				<div class="col-lg-12">
+					<div class="row">
+						<div class="col-lg-12 padding2">
+							<div class="panel panel-primary text-center">
+								<div class="panel-heading">
+									<h3 class="panel-title">Driving Duty</h3>
+								</div>
+								<div class="panel-body padding5">
+
+									<div class="row">
+										<div class="col-lg-12">
+											<table class="table table-striped">
+												<thead>
+													<tr>
+
+														<th>S.No.</th>
+														<th>DD Name</th>
+														<th>From</th>
+														<th>To</th>
+														<th>SignOn</th>
+														<th>SignOn Day</th>
+														<th>SignOff</th>
+														<th>SignOff Day</th>
+														<th>Duration</th>
+														<th>Distance</th>
+
+
+													</tr>
+												</thead>
+
+												<tbody>
+													<tr ng-repeat="drivingDuty in drivingDutyList.data">
+
+														<td>{{(itemsPerPage)? ((currentPage * itemsPerPage +
+															$index +1)-itemsPerPage ):''}}</td>
+														<td>{{drivingDuty[drivingDutyList.fields.ddName]}}</td>
+														<td>{{drivingDuty[drivingDutyList.fields.fromStation]}}</td>
+														<td>{{drivingDuty[drivingDutyList.fields.toStation]}}</td>
+
+														<td>{{drivingDuty[drivingDutyList.fields.departureTime]}}</td>
+														<td>{{Days[drivingDuty[drivingDutyList.fields.departureDay]]}}</td>
+														<td>{{drivingDuty[drivingDutyList.fields.arrivalTime]}}</td>
+														<td>{{Days[drivingDuty[drivingDutyList.fields.arrivalDay]]}}</td>
+														<td>{{drivingDuty[drivingDutyList.fields.duration]}}</td>
+														<td>{{drivingDuty[drivingDutyList.fields.distance]}}</td>
+
+
+
+													</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger btn-sm"
+						data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+

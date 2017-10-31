@@ -1,0 +1,6 @@
+<div class="mathoChartD3  col-lg-12" ng-show="!isLoading && !isError && isData">
+	<div id="{{chartId}}"></div>
+</div>
+<div class="fa fa-spinner fa-4x fa-pulse" ng-if="isLoading"></div>
+<div class="fa fa-exclamation-triangle fa-4x" ng-if="!isLoading && isError">Error</div>
+<div class="fa fa-exclamation-triangle fa-4x" ng-if="!isLoading && !isError && !isData">No Data Received</div>

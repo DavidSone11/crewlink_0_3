@@ -1,0 +1,95 @@
+<div class="row">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-3">
+				<h3>{{(stationdetails._links.self)?'Update':'Create'}} Station</h3>
+			</div>
+			<div class="col-lg-3">
+				<h3>
+					<button type="button" class="btn btn-primary btn-sm"
+						ng-show="(stationdetails._links.self)"
+						ng-click="reset();clearInput('ddlFromStation');">
+						 Create New Station
+					</button>
+				</h3>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-12" id="stationFormDiv">
+		<form role="form" name="stationForm" ng-class="submitClass" novalidate
+			ng-submit="stationForm.$valid && saveStation(stationdetails,(stationdetails._links.self)?'update':'create' )">
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="control-label">Station Code</label> <input
+								ng-model="stationdetails.code" ng-required="true"
+								name="stationcode" type="text" class="form-control"> <span
+								style="color: red"
+								ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && stationForm.stationcode.$dirty && stationForm.stationcode.$invalid)">
+								<span ng-show="stationForm.stationcode.$error.required">Station
+									Code is required.</span>
+							</span>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="control-label">Station Name</label> <input
+								ng-model="stationdetails.name" ng-required="true"
+								name="stationname" type="text" class="form-control"> <span
+								style="color: red"
+								ng-show="(submitClass=='ng-submitted') || (submitClass!='hide-errors' && stationForm.stationname.$dirty && stationForm.stationname.$invalid)">
+								<span ng-show="stationForm.stationname.$error.required">Station
+									Code is required.</span>
+							</span>
+						</div>
+					</div>
+				</div>
+				<h4>Head Station</h4>
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="control-label">Sign On Time</label> <input
+								ng-model="stationdetails.headStationSignOnDuration"
+								name="headstationsignonduration" type="text"
+								class="form-control">
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="control-label">Sign Off Time</label> <input
+								ng-model="stationdetails.headStationSignOffDuration"
+								name="headstationsignoffduration" type="text"
+								class="form-control">
+						</div>
+					</div>
+				</div>
+				<h4>Out Station</h4>
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="control-label">Sign On Time</label> <input
+								ng-model="stationdetails.outStationSignOnDuration"
+								name="outstationsignonduration" type="text" class="form-control">
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group">
+							<label class="control-label">Sign Off Time</label> <input
+								ng-model="stationdetails.outStationSignOffDuration"
+								name="outstationsignoffduration" type="text"
+								class="form-control">
+						</div>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary btn-sm"
+					ng-click="submitClass='ng-submitted'">
+					{{(stationdetails._links.self)?'Update':'Create'}} Station
+				</button>
+				<button type="button" class="btn btn-danger btn-sm"
+					ng-click="reset();clearInput('ddlFromStation');">
+					 Reset
+				</button>
+		</form>
+	</div>
+</div>

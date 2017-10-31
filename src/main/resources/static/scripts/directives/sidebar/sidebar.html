@@ -1,0 +1,221 @@
+<div>
+	<button tooltip="{{tooltipMessage}}" tooltip-placement="right"
+		tooltip-popup-delay="300"
+		class="glyphicon glyphicon glyphicon-chevron-left btn btn-primary animate-hide sidebar-toggle-button"
+		id="togglebutton" type="button" ng-click="hideSidebar()"></button>
+	<div class="navbar-default sidebar animate-hide" ng-class="(hideSidebarVar)?'hide':''" id="toggleSideBar"
+		role="navigation">
+		<div class="sidebar-nav navbar-collapse">
+			<ul class="nav in" id="side-menu">
+				<li ng-if="UserService.getSelectedUserPlan().id == null" ng-class="{active: collapseVar==4}">{{dropDown}} <a href=""
+					ng-click="loadUserPlans()"
+					confirm="Please select User Plan To View Dash board!!!"
+					confirm-settings="{size: 'md'}"
+					confirm-header-class="confirm-header-warning "
+					confirm-footer-class="confirm-footer-default"
+					confirm-ok-button-class="btn-primary"
+					confirm-cancel-button-class="btn-default hide"
+					confirm-title="Warning!!" confirm-ok="Select" confirm-cancel="No"><i
+						class="fa fa-dashboard fa-fw"></i> Dash board <span
+						class="fa arrow"></span></a>
+				</li>
+				
+				<li ng-if="UserService.getSelectedUserPlan().id != null" ui-sref-active="active"><a ui-sref="dashboard.home"><i
+						class="fa fa-dashboard fa-fw"></i> Dash board</a></li>
+				<li ng-show="hasAdmin" ui-sref-active="active"><a ui-sref="dashboard.users"><i
+						class="fa fa-user fa-fw"></i> Users<span></span></a></li>
+
+				<li ng-class="{active: collapseVar==1}">{{dropDown}} <a href=""
+					ng-click="check(1)"><i class="fa fa-train fa-fw"></i> Train <span
+						class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=1">
+						<li ui-sref-active="active"><a ui-sref="dashboard.trains">List
+								All Trains</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.trainTypes">Train
+								Types</a></li>
+					</ul>
+				</li>
+
+				<li ng-class="{active: collapseVar==2}">{{dropDown}} <a href=""
+					ng-click="check(2)"><i class="fa fa-subway fa-fw"></i> Station
+						<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=2">
+						<li ui-sref-active="active"><a ui-sref="dashboard.stations">List
+								All Stations</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.divisions">Divisions</a>
+						</li>
+					</ul>
+				</li>
+
+				<!-- <li ng-class="{active: collapseVar==3}">{{dropDown}} <a href=""
+					ng-click="check(3)"><i class="fa fa-space-shuttle fa-fw"></i>
+						Pilot <span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=3">
+						<li ui-sref-active="active"><a ui-sref="dashboard.pilotTrips">List
+								All Pilot Trips</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.pilotTypes">Pilot
+								Types</a></li>
+					</ul>
+				</li> -->
+
+				<li ng-if="UserService.getSelectedUserPlan().id == null" ng-class="{active: collapseVar==4}">{{dropDown}} <a href=""
+					ng-click="loadUserPlans()"
+					confirm="Please select User Plan To View/Create Driving Section!!!"
+					confirm-settings="{size: 'md'}"
+					confirm-header-class="confirm-header-warning "
+					confirm-footer-class="confirm-footer-default"
+					confirm-ok-button-class="btn-primary"
+					confirm-cancel-button-class="btn-default hide"
+					confirm-title="Warning!!" confirm-ok="Select" confirm-cancel="No"><i
+						class="fa fa-sliders fa-fw"></i> Driving Section <span
+						class="fa arrow"></span></a>
+				</li>
+				<li ng-if="UserService.getSelectedUserPlan().id != null" ng-class="{active: collapseVar==4}">{{dropDown}} <a href=""
+					ng-click="check(4)"><i class="fa fa-sliders fa-fw"></i> Driving
+						Section <span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=4">
+						<li ui-sref-active="active"><a
+							ui-sref="dashboard.drivingSection">List All Driving Sections</a>
+						</li>
+						<li ui-sref-active="active"><a
+							ui-sref="dashboard.drivingSectionForm">Create Driving Section</a>
+						</li>
+						
+						<li ui-sref-active="active"><a ui-sref="dashboard.drivingSectionChart">Create Driving Section Chart</a> 
+						     
+						</li>
+						
+						
+					</ul>
+				</li>
+
+				
+				<li ng-if="UserService.getSelectedUserPlan().id == null" ng-class="{active: collapseVar==4}">{{dropDown}} <a href=""
+					ng-click="loadUserPlans()"
+					confirm="Please select User Plan To View/Create Driving Duties!!!"
+					confirm-settings="{size: 'md'}"
+					confirm-header-class="confirm-header-warning "
+					confirm-footer-class="confirm-footer-default"
+					confirm-ok-button-class="btn-primary"
+					confirm-cancel-button-class="btn-default hide"
+					confirm-title="Warning!!" confirm-ok="Select" confirm-cancel="No"><i
+						class="fa fa-random fa-fw"></i> Driving Duty <span
+						class="fa arrow"></span></a>
+				</li>
+				<li ng-if="UserService.getSelectedUserPlan().id != null" ng-class="{active: collapseVar==5}">{{dropDown}} <a href=""
+					ng-click="check(5)"><i class="fa fa-random fa-fw"></i> Driving
+						Duty <span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=5">
+						<li ui-sref-active="active"><a
+							ui-sref="dashboard.drivingDuty">List All Driving Duties</a></li>
+						<li ui-sref-active="active"><a
+							ui-sref="dashboard.drivingDutyForm">Create Driving Duty</a></li>
+					</ul>
+				</li>
+
+				<li ui-sref-active="active"><a ui-sref="dashboard.crewTypes"><i
+						class="fa fa-user fa-fw"></i> Crew Type<span></span></a></li>
+
+
+
+				<li ng-if="UserService.getSelectedUserPlan().id == null" ng-class="{active: collapseVar==4}">{{dropDown}} <a href=""
+					ng-click="loadUserPlans()"
+					confirm="Please select User Plan To View/Create Round Trip!!!"
+					confirm-settings="{size: 'md'}"
+					confirm-header-class="confirm-header-warning "
+					confirm-footer-class="confirm-footer-default"
+					confirm-ok-button-class="btn-primary"
+					confirm-cancel-button-class="btn-default hide"
+					confirm-title="Warning!!" confirm-ok="Select" confirm-cancel="No"><i
+						class="fa fa-train fa-fw"></i> Round Trip <span
+						class="fa arrow"></span></a>
+				</li>
+				<li ng-if="UserService.getSelectedUserPlan().id != null" ng-class="{active: collapseVar==6}">{{dropDown}} <a href=""
+					ng-click="check(6)"><i class="fa fa-train fa-fw"></i> Round Trip
+						<span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=6">
+						<li ui-sref-active="active"><a ui-sref="dashboard.roundTrip">List
+								All RoundTrip</a></li>
+						<li ui-sref-active="active"><a
+							ui-sref="dashboard.roundTripForm">Create Round Trip</a></li>
+						<li ui-sref-active="active"><a
+							ui-sref="dashboard.roundTripAnalysis({isAnalysis:true})">Round Trip Analysis</a></li>
+					</ul>
+				</li>
+
+				
+				<li ng-if="UserService.getSelectedUserPlan().id == null" ng-class="{active: collapseVar==4}">{{dropDown}} <a href=""
+					ng-click="loadUserPlans()"
+					confirm="Please select User Plan To View/Create Crew Link!!!"
+					confirm-settings="{size: 'md'}"
+					confirm-header-class="confirm-header-warning "
+					confirm-footer-class="confirm-footer-default"
+					confirm-ok-button-class="btn-primary"
+					confirm-cancel-button-class="btn-default hide"
+					confirm-title="Warning!!" confirm-ok="Select" confirm-cancel="No"><i
+						class="fa fa-home fa-fw"></i> Crew Link<span
+						class="fa arrow"></span></a>
+				</li>
+				
+				<li ng-if="UserService.getSelectedUserPlan().id == null" ng-class="{active: collapseVar==4}">{{dropDown}} <a href=""
+					ng-click="loadUserPlans()"
+					confirm="Please select User Plan To View/Create Crew Link!!!"
+					confirm-settings="{size: 'md'}"
+					confirm-header-class="confirm-header-warning "
+					confirm-footer-class="confirm-footer-default"
+					confirm-ok-button-class="btn-primary"
+					confirm-cancel-button-class="btn-default hide"
+					confirm-title="Warning!!" confirm-ok="Select" confirm-cancel="No"><i
+						class="fa fa-home fa-fw"></i> Crew Link<span
+						class="fa arrow"></span></a>
+				</li>
+				
+				
+				
+				<li ng-if="UserService.getSelectedUserPlan().id != null" ng-class="{active: collapseVar==8}">{{dropDown}} <a href=""
+					ng-click="check(8)"><i class="fa fa-home fa-fw"></i>Crew Link <span
+						class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=8">
+						<li ui-sref-active="active"><a ui-sref="dashboard.crewLink">List
+								All CrewLink</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.crewLinkStationSummary">Crew Link Station Summary</a></li>
+						<li ui-sref-active="active"><a
+							ui-sref="dashboard.crewLinkForm">Create Crew Link</a></li>
+					</ul>
+				</li>
+				<!-- <li ui-sref-active="active"><a ui-sref="dashboard.newPilotCreation"><i
+						class="fa fa-user fa-fw"></i>New Pilot<span></span></a></li>
+				 -->		
+						
+				<li ng-class="{active: collapseVar==9}">{{dropDown}} <a href=""
+					ng-click="check(9)"><i class="fa fa-space-shuttle fa-fw"></i>
+						Pilot <span class="fa arrow"></span></a>
+					<ul class="nav nav-second-level" collapse="collapseVar!=9">
+						<li ui-sref-active="active"><a ui-sref="dashboard.newPilotCreation">Create
+								Pilot</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.pilotTypes">Pilot
+								Types</a></li>
+								
+						<li ui-sref-active="active"><a ui-sref="dashboard.listPilots">List Pilot</a></li>
+					</ul>
+				</li>
+				<li ng-if="UserService.getSelectedUserPlan().id != null"  ng-class="{active: collapseVar==10}">{{dropDown}} <a href=""
+					ng-click="check(10)"><i class="fa fa-search fa-fw"></i>
+						Search <span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level" collapse="collapseVar!=10">
+						<li ui-sref-active="active"><a ui-sref="dashboard.searchItems">Find Items</a></li>
+					</ul>
+				</li>
+				<li ng-if="UserService.getSelectedUserPlan().id != null"  ng-class="{active: collapseVar==11}">{{dropDown}} <a href=""
+					ng-click="check(11)"><i class="fa fa-search fa-fw"></i>
+						Improvement Suggestions <span class="fa arrow"></span></a>
+						<ul class="nav nav-second-level" collapse="collapseVar!=11">
+						<li ui-sref-active="active"><a ui-sref="dashboard.improveDrivingSection">Improve Driving Section</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.improveLongDrivingDuty">Improve Long Driving Duty</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.improveDrivingDutyWithDailyPilots">Improve Driving Duty with Daily Pilots</a></li>
+						<li ui-sref-active="active"><a ui-sref="dashboard.improveRoundTripWithExcessOSR">Improve Round Trip with Excess OSR</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>

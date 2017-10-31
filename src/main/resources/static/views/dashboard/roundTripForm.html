@@ -1,0 +1,553 @@
+<style>
+.bg-orange {
+	background-color: rgba(240, 168, 78, 0.75);
+}
+
+.bg-red {
+	background-color: rgb(255, 110, 46);
+}
+
+.bg-green {
+	background-color: rgba(0, 128, 0, 0.62);
+}
+
+.bg-yellow {
+	background-color: rgba(255, 255, 0, 0.58);
+}
+
+.bg-white {
+	background-color: white;
+}
+
+.bg-blue {
+	background-color: rgba(0, 196, 255, 0.5);
+}
+
+.bg-lightBlue {
+	background-color: rgba(0, 0, 255, 0.24);;
+}
+
+.height26 {
+	height: 26px;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.notAllowed {
+	cursor: not-allowed;
+}
+</style>
+
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Create Round Trip</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12" ng-show="!isAnalysis">
+			<div class="row">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						List Of Driving Duties
+						<div class="input-group pull-right">
+
+							<label class="control-label"> Items Per Page (1-100) </label> <input
+								name="itemsperpage" class="input-sm form-control pull-right"
+								min=1 max=100 value=5 step=1 type="number"
+								ng-model-options="{ debounce: 1000 }" ng-model="itemsPerPage">
+						</div>
+
+					</div>
+					<div class="panel-body">
+						<table class="table table-striped" st-pipe="serverFetch.process;"
+							st-table="drivingDuties">
+							<thead st-bind-model="{{refreshDrivingDuty}}">
+								<tr>
+									<th st-ratio="3">Sl No</th>
+									<th st-ratio="20" st-sort="ddName">DD Name</th>
+									<th st-ratio="10" st-sort="fromStation">From</th>
+									<th st-ratio="5" st-sort="toStation">To</th>
+									<th st-ratio="10" st-sort="departureTime">Sign On</th>
+									<th st-ratio="10" st-sort="departureDay">Sign On Day</th>
+									<th st-ratio="10" st-sort="arrivalTime">Sign Off</th>
+									<th st-ratio="10" st-sort="arrivalDay">Sign Off Day</th>
+									<th st-ratio="10" st-sort="duration">Duration</th>
+									<th st-ratio="10" st-sort="distance">Distance</th>
+								</tr>
+								<tr>
+									<th>&nbsp;</th>
+									<th><input type="text" st-ratio="90" st-search="ddName"
+										placeholder="Duty Name" st-delay="1000" /></th>
+									<th><input type="text" st-ratio="60"
+										st-search="fromStation" placeholder="From" st-delay="1000"
+										ng-model="fromStationDD" /></th>
+									<th><input type="text" st-ratio="100"
+										st-search="toStation" placeholder="To" st-delay="1000"
+										ng-model="toStation" /></th>
+									<th><input type="text" st-ratio="45"
+										st-search="minDepartureTime" placeholder="Min Sign On Time"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDepartureTime" placeholder="Max Sign On Time"
+										st-delay="1000" /></th>
+									<th><select st-ratio="90" st-search="departureDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select></th>
+
+									<th><input type="text" st-ratio="45"
+										st-search="minArrivalTime" placeholder="Min Sign Off Time"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxArrivalTime" placeholder="Max Sign Off Time"
+										st-delay="1000" /></th>
+									<th><select st-ratio="90" st-search="arrivalDay">
+											<option value="" selected>All</option>
+											<option ng-repeat="day in Days" value="{{day}}">{{
+												day }}</option>
+									</select></th>
+									<th><input type="text" st-ratio="45"
+										st-search="minDuration" placeholder="Min Duration"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDuration" placeholder="Max Duration"
+										st-delay="1000" /></th>
+									<th><input type="text" st-ratio="45"
+										st-search="minDistance" placeholder="Min Distance"
+										st-delay="1000" /> <input type="text" st-ratio="45"
+										st-search="maxDistance" placeholder="Max Distance"
+										st-delay="1000" /></th>
+								</tr>
+							</thead>
+							<!--ng-show="isDrivingDutyUnused(drivingDuty)" -->
+							<tbody ng-show="!isLoadingDrivingDuties && (itemsPerPage)">
+								<tr ng-repeat="drivingDuty in drivingDuties.data"
+									ng-click="addDrivingDuty(drivingDuty);">
+									<td>{{(itemsPerPage)? ((currentPage * itemsPerPage +
+										$index +1)-itemsPerPage ):''}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.ddName]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.fromStation]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.toStation]}}</td>
+
+									<td>{{drivingDuty[drivingDuties.fields.departureTime]}}</td>
+									<td>{{Days[drivingDuty[drivingDuties.fields.departureDay]]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.arrivalTime]}}</td>
+									<td>{{Days[drivingDuty[drivingDuties.fields.arrivalDay]]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.duration]|
+										time:'mm':'hhh mmm':false}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.distance]}}</td>
+									<!-- <td>{{drivingDuty[10]}}</td> -->
+								</tr>
+							</tbody>
+							<tbody ng-show="isLoadingDrivingDuties">
+								<tr>
+									<td colspan="10" class="text-center"><i
+										class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Driving
+										Duties...</td>
+								</tr>
+							</tbody>
+
+							<tfoot>
+								<tr>
+									<td colspan="9" class="text-center">
+										<div st-items-by-page="itemsPerPage" st-pagination=""
+											st-template="scripts/directives/pagination/pagination.custom.html"></div>
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-lg-12" ng-show="!isAnalysis">
+
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<form class="form-inline">
+							Selected Driving Duties to Create Round Trip
+							&nbsp;&nbsp;&nbsp;Select Crew Type :
+							<div class="form-group">
+								<select data-ng-options="c.name for c in crewTypes"
+									class="form-control input-sm" data-ng-model="selectedCrewType">
+									<option>Select Crew Type</option>
+								</select>
+							</div>
+							<!-- rest of form -->
+						</form>
+					</div>
+
+					<div class="panel-body">
+						<table class="table table-striped" st-table="roundTrips">
+							<thead>
+								<tr>
+									<th st-ratio="5">S.No.</th>
+									<th st-ratio="10">DD Name</th>
+									<th st-ratio="5">From</th>
+									<th st-ratio="5">To</th>
+									<th st-ratio="10">Sign On</th>
+									<th st-ratio="10">Sign On Day</th>
+									<th st-ratio="10">Sign Off</th>
+									<th st-ratio="10">Sign Off Day</th>
+									<th st-ratio="10">Duration</th>
+									<th st-ratio="10">Distance</th>
+									<th st-ratio="10">OS Rest</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="drivingDuty in selectedDuties">
+									<td>{{$index + 1}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.ddName]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.fromStation]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.toStation]}}</td>
+
+									<td>{{drivingDuty[drivingDuties.fields.departureTime]}}</td>
+									<td>{{Days[drivingDuty[drivingDuties.fields.departureDay]]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.arrivalTime]}}</td>
+									<td>{{Days[drivingDuty[drivingDuties.fields.arrivalDay]]}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.duration]|
+										time:'mm':'hhh mmm':false}}</td>
+									<td>{{drivingDuty[drivingDuties.fields.distance]}}</td>
+									<td>{{(drivingDuty.totalOutStationRestTime)?(drivingDuty.totalOutStationRestTime
+										| time:'mm':'hhh mmm':false):""}}</td>
+
+								</tr>
+							<tfoot>
+								<tr>
+									<td colspan="10" class="text-center">
+										<div st-items-by-page="itemsPerPage" st-pagination=""
+											st-template="scripts/directives/pagination/pagination.custom.html"></div>
+									</td>
+								</tr>
+							</tfoot>
+
+						</table>
+						<a class="btn btn-sm btn-danger" ng-show="selectedDuties.length>0"
+							ng-click="removeLastDrivingDuty();">Remove Last Element</a> <a
+							class="btn btn-primary btn-sm" ng-show="selectedDuties.length>0"
+							ng-click="saveRoundTrips();">Save</a>
+						<!-- <a class="btn btn-primary btn-sm" ng-show="selectedDuties.length>0"
+							ng-click="saveManyRoundTrips();">Save For Many Days</a>
+ -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="panel panel-default ">
+					<div class="panel-heading">
+						<form class="form-inline">
+							Driving duties Analysis between
+							<div class="form-group">
+								<input type="text" id="singleStationCode"
+									ng-model="chartMetaData.fromStation"
+									class="form-control input-sm" placeholder="Station Code"
+									style="width: 110px;"> Station and: <input type="text"
+									id="totalTrains" ng-model="chartMetaData.toStation"
+									class="form-control input-sm" placeholder="Station Code"
+									style="width: 110px;">
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadAllDutiesInMatrixChart(false,true)">Daily
+									Trains</button>
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadAllDutiesInMatrixChart(true)">Daily and
+									6 days trains</button>
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadAllDutiesInMatrixChart()">All Trains
+									Matrix</button>
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadAllDutiesInMatrixChart(false,false,true)">All
+									Trains Chart</button>
+							</div>
+							<!-- rest of form -->
+						</form>
+					</div>
+					<div class="panel-body">
+						<table ng-show="isLoadingMatrixChart" style="width: 100%;">
+							<tbody>
+								<tr>
+									<td class="text-center"><i
+										class="fa fa-spinner fa-4x fa-pulse"> </i> Loading Driving
+										Duties...</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- ng-show="isDutiesFound"> -->
+						<div
+							ng-show="destinationStationDuties.length > 0 && !isLoadingMatrixChart">
+							<div>
+								<button class="btn btn-sm btn-primary pull-right"
+									ng-click="findOptimizedRTsInMatrixChart(true)">Auto
+									Select All</button>
+								<button class="btn btn-sm btn-primary pull-right"
+									ng-click="findOptimizedRTsInMatrixChart(false)"
+									ng-show="!is6Day && !isDaily">Auto Select Not Used</button>
+								<div>
+									{{chartMetaData.fromStation}} Rest :
+									{{minutesToTimeFormat(sourceRest)}}<br>
+									{{chartMetaData.toStation}} Rest :
+									{{minutesToTimeFormat(destinationRest)}}<br> Total Rest :
+									{{minutesToTimeFormat(sourceRest+destinationRest)}}<br>
+								</div>
+								<div>
+									<form class="form-inline">
+										Select Crew Type :
+										<div class="form-group">
+											<select data-ng-options="c.name for c in crewTypes"
+												class="input-sm" data-ng-model="matrixChartCrewType">
+												<option>Select Crew Type</option>
+											</select>
+											<button class="btn btn-primary btn-sm"
+												ng-click="createRoundTripsFromMatrixChart()">Save
+												RoundTrips</button>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div id="matrixChartDiv1" ng-show="!isDaily && !is6Day"
+								style="width: 100%; overflow-x: scroll; height: 20px; overflow-y: hidden;margin-top: 10px;">
+							</div>
+							<div style="overflow: auto" id="matrixChartDiv">
+								<table class="table">
+									<tbody>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td ng-repeat="duty in destinationStationDuties">
+												{{minutesToTimeFormat(duty[ddFieldsForMatrixChart.availableTime])}}
+												{{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.availableDay]]
+												| limitTo:3)}}</td>
+											<td>AVL</td>
+										</tr>
+										<tr>
+											<td ng-class="(is6Day)?'bg-blue':''">{{(is6Day)?"6 Day
+												Duties":""}}</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td ng-repeat="duty in destinationStationDuties">
+												{{duty[ddFieldsForMatrixChart.arrivalTime] | limitTo:5}}
+												{{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.arrivalDay]] |
+												limitTo:3)}}</td>
+											<td>Sign Off {{chartMetaData.fromStation}}</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td ng-repeat="duty in destinationStationDuties"
+												ng-class="(duty[ddFieldsForMatrixChart.is6Day] && is6Day)?'bg-blue':'bg-white'">
+												{{duty[ddFieldsForMatrixChart.ddName]}}</td>
+											<td>DD No</td>
+										</tr>
+										<tr>
+											<td>Sign On {{chartMetaData.fromStation}}</td>
+											<td>DD No</td>
+											<td>Sign Off {{chartMetaData.toStation}}</td>
+											<td>AVL</td>
+											<td ng-repeat="duty in destinationStationDuties">
+												{{duty[ddFieldsForMatrixChart.departureTime] | limitTo:5}}
+												{{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.departureDay]]
+												| limitTo:3)}}</td>
+											<td>Sign On {{chartMetaData.toStation}}</td>
+										</tr>
+										<tr ng-repeat="duty in sourceStationDuties"
+											ng-class="waitingTimes[0][$index].clas">
+											<td style="background-color: white">{{duty[ddFieldsForMatrixChart.departureTime]
+												| limitTo:5}} {{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.departureDay]]
+												| limitTo:3)}}</td>
+											<td
+												ng-class="(duty[ddFieldsForMatrixChart.is6Day] && is6Day)?'bg-blue':'bg-white'">{{duty[ddFieldsForMatrixChart.ddName]}}</td>
+											<td style="background-color: white">{{duty[ddFieldsForMatrixChart.arrivalTime]
+												| limitTo:5}} {{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.arrivalDay]] |
+												limitTo:3)}}</td>
+											<td style="background-color: white">
+												{{minutesToTimeFormat(duty[ddFieldsForMatrixChart.availableTime])}}
+												{{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.availableDay]]
+												| limitTo:3)}}</td>
+											<td ng-repeat="time in waitingTimes[0][$index].waitingTimes"
+												ng-class="((!time.clas && !waitingTimes[0][$parent.$index].clas) || (time.clas == 'bg-red'))?'pointer '+time.clas : 'notAllowed '+time.clas"
+												ng-click="((!time.clas && !waitingTimes[0][$parent.$index].clas) || (time.clas == 'bg-red'))? selectRTInMatrixChart(0,$parent.$index,$index) : $event.stopPropagation()">
+												{{minutesToTimeFormat(time.waitingTime)}}</td>
+										</tr>
+										<tr>
+											<td style="height: 50px"></td>
+										</tr>
+										<tr ng-repeat="duty in sourceStationDuties"
+											ng-class="waitingTimes[1][$index].clas">
+											<td style="background-color: white">{{duty[ddFieldsForMatrixChart.departureTime]
+												| limitTo:5}} {{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.departureDay]]
+												| limitTo:3)}}</td>
+											<td
+												ng-class="(duty[ddFieldsForMatrixChart.is6Day] && is6Day)?'bg-blue':'bg-white'">{{duty[ddFieldsForMatrixChart.ddName]}}</td>
+											<td style="background-color: white">{{duty[ddFieldsForMatrixChart.arrivalTime]
+												| limitTo:5}} {{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.arrivalDay]] |
+												limitTo:3)}}</td>
+											<td style="background-color: white">
+												{{minutesToTimeFormat(duty[ddFieldsForMatrixChart.availableTime])}}
+												{{(isDaily ||
+												is6Day)?"":(Days[duty[ddFieldsForMatrixChart.availableDay]]
+												| limitTo:3)}}</td>
+											<td ng-repeat="time in waitingTimes[1][$index].waitingTimes"
+												ng-class="((!time.clas && !waitingTimes[1][$parent.$index].clas) || (time.clas == 'bg-red'))?'pointer '+time.clas : 'notAllowed '+time.clas"
+												ng-click="((!time.clas && !waitingTimes[1][$parent.$index].clas) || (time.clas == 'bg-red'))? selectRTInMatrixChart(1,$parent.$index,$index) : $event.stopPropagation()">
+												{{minutesToTimeFormat(time.waitingTime)}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div id="drivingDutiesForTwoStations"></div>
+					</div>
+					<div class="panel-body" ng-show="!isMatrixSearched">
+						<h4>Enter station codes to load trains chart</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="row">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<form class="form-inline">
+							Chart for all driving duties per week from and to :
+							<div class="form-group">
+								<input type="text" id="stationCodeForCreateRoundtrip"
+									ng-model="stationCodeForCreateRoundtrip" class="form-control"
+									placeholder="Station Code" style="width: 110px;">
+								Station ,No of Duties: <input type="number" id="totalTrains"
+									ng-model="noOfDutiesLimit" class="form-control"
+									placeholder="no of duties" min="1" style="width: 110px;">
+								<button class="btn btn-primary btn-sm"
+									ng-click="loadCreateRoundTripChart()">search</button>
+							</div>
+							<!-- rest of form -->
+						</form>
+					</div>
+					<div class="panel-body">
+						<div class="col-lg-12" ng-show="newRoundTripsFromChart.length > 0">
+							<h4>
+								<b>Partial And New Round Trips <select
+									data-ng-options="c.name for c in crewTypes" class="input-sm"
+									data-ng-model="crewTypeForGraph"
+									ng-change="changeAllChartRTCrewTypes()">
+										<option>Select Crew Type</option>
+								</select>
+									<button class="btn btn-primary btn-sm"
+										ng-click="saveRoundTripsFromGraph()">Update Changes</button>
+								</b>
+							</h4>
+							<table class="table">
+								<thead>
+									<tr>
+										<th class="text-center">RT S.No</th>
+										<th class="text-center">DD S.No</th>
+										<th class="text-center">DD Name</th>
+										<th class="text-center">From</th>
+										<th class="text-center">To</th>
+										<th class="text-center">Dep Time</th>
+										<th class="text-center">Dep Day</th>
+										<th class="text-center">Arr Time</th>
+										<th class="text-center">Arr Day</th>
+										<th class="text-center">Crew Type</th>
+									</tr>
+								</thead>
+								<tbody ng-repeat="rt in newRoundTripsFromChart">
+									<tr ng-repeat="dd in rt.drivingDuties"
+										ng-class="(rt.drivingDuties[0][createRoundTripDutiesFields.fromStation]==rt.drivingDuties[rt.drivingDuties.length-1][createRoundTripDutiesFields.toStation])?'bg-green':'bg-lightBlue'">
+										<td class="text-center" rowspan="{{rt.drivingDuties.length}}"
+											ng-show="$index==0">{{$parent.$index+1}}</td>
+										<td class="text-center">{{$index+1}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.ddName]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.fromStation]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.toStation]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.departureTime]}}</td>
+										<td class="text-center">{{Days[dd[createRoundTripDutiesFields.departureDay]]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.arrivalTime]}}</td>
+										<td class="text-center">{{Days[dd[createRoundTripDutiesFields.arrivalDay]]}}</td>
+										<td class="text-center" rowspan="{{rt.drivingDuties.length}}"
+											ng-show="$index==0"><select
+											data-ng-options="c.name for c in crewTypes"
+											class="form-control input-sm" data-ng-model="rt.crewType">
+												<option>Select Crew Type</option>
+										</select></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-lg-12"
+							ng-show="deletedRoundTripsFromChart.length > 0">
+							<h4>
+								<b>Deleted Existing Round Trips
+									<button class="btn btn-primary btn-sm"
+										ng-click="deleteRoundTripFromChart(true)">Delete
+										Round Trips</button>
+								</b>
+							</h4>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th class="text-center">RT S.No</th>
+										<th class="text-center">DD S.No</th>
+										<th class="text-center">DD Name</th>
+										<th class="text-center">From</th>
+										<th class="text-center">To</th>
+										<th class="text-center">Dep Time</th>
+										<th class="text-center">Dep Day</th>
+										<th class="text-center">Arr Time</th>
+										<th class="text-center">Arr Day</th>
+									</tr>
+								</thead>
+								<tbody ng-repeat="rt in deletedRoundTripsFromChart">
+									<tr ng-repeat="dd in rt">
+										<td class="text-center" rowspan="{{rt.length}}"
+											ng-show="$index==0">{{$parent.$index+1}}</td>
+										<td class="text-center">{{$index+1}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.ddName]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.fromStation]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.toStation]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.departureTime]}}</td>
+										<td class="text-center">{{Days[dd[createRoundTripDutiesFields.departureDay]]}}</td>
+										<td class="text-center">{{dd[createRoundTripDutiesFields.arrivalTime]}}</td>
+										<td class="text-center">{{Days[dd[createRoundTripDutiesFields.arrivalDay]]}}</td>
+										<td class="text-center" ng-show="$index == 0"><a
+											class="btn btn-xs btn-danger fa fa-remove"
+											ng-click="removeRTFromDeletedList(rt)"> </a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div id="createRoundTripChartDiv1"
+							style="width: 100%; overflow-x: scroll; height: 20px; overflow-y: hidden;">
+						</div>
+						<div id="createRoundTripChartDiv" 
+							style="width: 100%; overflow-x: scroll;">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+<toaster-container
+	toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+

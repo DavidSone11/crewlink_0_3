@@ -1,0 +1,104 @@
+<style>
+	.userPlans a:focus,.userPlans a:hover {
+    text-decoration: none;
+}
+</style>
+
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h2 class="page-header">
+				Current User Plan  <span
+					ng-show="UserService.getSelectedUserPlan().id!=null">:
+					{{UserService.getSelectedUserPlan().name}}</span>
+					<span
+					ng-show="UserService.getSelectedUserPlan().id==null">:
+					Not Selected</span>
+			</h2>
+		</div>
+	</div>
+	<div class="row userPlans">
+		<div class="col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">User Plans List</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<table class="table table-striped">
+						<thead><tr><th>S.No</th><th>Plan name</th><th>Action</th></tr></thead>
+						<tbody>
+							<tr ng-repeat="userplan in userPlans">
+								<th>{{$index+1}}</th>
+								<th>{{userplan.name}}</th>
+								<th>
+									<button class="btn btn-xs btn-success" ng-click="selectUserPlan(userplan)">Select</button>
+									<button class="btn btn-xs btn-warning" ng-click="updateUserPlan(userplan)" data-toggle="tooltip" title="Edit"><i class="fa fa-edit"></i></button>
+									<button
+									class="btn btn-xs btn-danger fa fa-remove"
+									ng-click="deleteUserPlan(userplan)"
+									confirm="Are you sure to delete !!!"
+									confirm-settings="{size: 'md'}"
+									confirm-header-class="confirm-header-danger "
+									confirm-footer-class="confirm-footer-default"
+									confirm-ok-button-class="btn-danger"
+									confirm-cancel-button-class="btn-default"
+									confirm-title="Confirm Deletion!!" confirm-ok="Yes"
+									confirm-cancel="No" title="Remove"> </button>
+								</th>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">{{action}} User Plan
+					<span ng-show="!isSave" class="pull-right" style="margin-top: -5px;">
+						<button class="btn btn-sm btn-primary" ng-click="setInitValues()">Create User Plan</button>
+					</span>
+				</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-lg-12" >
+							<form role="form" name="planForm" novalidate>
+								<div class="form-group">
+									<input type="text" ng-click="submitted=false"
+										ng-model="userPlan.name" class="form-control input-md" name="planName" placeholder="Enter User Plan Name"/> 
+									<span style="color: red"
+										ng-show="submitted && !userPlan.name">Plan name is
+											required.</span>
+								</div>
+								<div class="form-group">
+									<input ng-show="isSave" type="submit" class="btn btn-primary btn-sm"
+										ng-click="submitted=true;save(userPlan,'create')" value="Create Plan" />
+									<input ng-show="!isSave" type="submit" class="btn btn-primary btn-sm"
+										ng-click="submitted=true;save(userPlan,'update')" value="Update Plan" />
+									
+								</div>
+								<div class="form-group">
+									<input ng-show="!isSave" type="text" ng-click="submitted=false"
+										ng-model="copyUserPlan.newUserPlanName" class="form-control input-md" name="planName" placeholder="Enter User Plan Name"/> 
+										<br />
+										<span style="color: red"
+										ng-show="copyUserPlanError">Copy Plan name is
+											required.</span>
+											
+									<input ng-show="!isSave && !isCopying" type="submit" class="btn btn-warning btn-sm"
+										ng-click="copyPlan()" value="Copy Plan" />
+									<button ng-show="!isSave && isCopying" class="btn btn-danger btn-sm">Copying In Process</button>
+									
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<toaster-container
+		toaster-options="{'time-out': 3000, 'close-button':true, 'position-class':'toast-bottom-right'}"></toaster-container>
+
